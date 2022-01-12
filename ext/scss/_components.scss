@@ -1,0 +1,115 @@
+//BUTTONS
+
+@mixin button-base() {
+  max-width: 100%;
+  border-radius: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: transparent;
+  transition-property: color, background-color, background-position, border-color, box-shadow, opacity, height;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in;
+  -webkit-appearance: none;
+  cursor: pointer;
+  text-decoration: none;
+
+  & > span {
+    top: 2px;
+    white-space: normal;
+    display: inline;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    z-index: 10;
+  }
+
+  &.disabled {
+    cursor: default;
+  }
+
+  input {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    white-space: normal;
+  }
+}
+
+@mixin button() {
+  @include button-base();
+  padding: 12px 20px;
+  background-color: $color_3;
+  color: $color_white;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 40px;
+}
+
+@mixin button-icon() {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  & > span {
+    @include screen-reader-text();
+  }
+}
+
+.gam-button {
+  @include button();
+
+  &--icon {
+    @include button-icon();
+
+
+    &.--icon--price {
+      background-image: url(images/price.png);
+    }
+  }
+}
+
+// TOOLTIPS
+
+.gam-tooltip {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  background: $color_white;
+  color: $color_1;
+  border-radius: 100px;
+  padding: 10px 24px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+}
+
+
+
+// Scoreboard score
+
+.gam-score {
+  background: url(images/price.png) 0 center no-repeat;
+  background-size: contain;
+  min-height: 50px;
+  padding: 0 0 0 60px;
+}
+
+// Scoreboard Summary
+
+.gam-scoreboard-summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}

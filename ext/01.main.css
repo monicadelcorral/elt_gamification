@@ -1,3 +1,120 @@
-body {
-    background: pink;
+@font-face {
+  font-display: swap;
+  font-family: "DejaVu Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: url("fonts/DejaVuSans-Bold-webfont.woff2") format("woff2"), url("fonts/DejaVuSans-Bold-webfont.woff") format("woff"), url("fonts/DejaVuSans-Bold-webfont.ttf") format("truetype");
 }
+[class^=gam-] {
+  font-family: "DejaVu Sans", sans-serif;
+}
+
+.gam-page {
+  background: #fff;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.gam-button {
+  max-width: 100%;
+  border-radius: 100px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: transparent;
+  transition-property: color, background-color, background-position, border-color, box-shadow, opacity, height;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in;
+  -webkit-appearance: none;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 12px 20px;
+  background-color: #395482;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 40px;
+}
+.gam-button > span {
+  top: 2px;
+  white-space: normal;
+  display: inline;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+}
+.gam-button.disabled {
+  cursor: default;
+}
+.gam-button input {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  white-space: normal;
+}
+.gam-button--icon {
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.gam-button--icon > span {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  width: 1px;
+  word-wrap: normal !important;
+}
+.gam-button--icon.--icon--price {
+  background-image: url(images/price.png);
+}
+
+.gam-tooltip {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  background: #fff;
+  color: #b64a02;
+  border-radius: 100px;
+  padding: 10px 24px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+}
+
+.gam-score {
+  background: url(images/price.png) 0 center no-repeat;
+  background-size: contain;
+  min-height: 50px;
+  padding: 0 0 0 60px;
+}
+
+.gam-scoreboard-summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+/*# sourceMappingURL=01.main.css.map */

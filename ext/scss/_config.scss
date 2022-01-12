@@ -1,0 +1,102 @@
+//----------------------------------------//
+//                                        //
+//  Config and variables                  //
+//                                        //
+//----------------------------------------//
+
+$mq_max_width_tablet : 1030px;
+$mq_max_width_tablet_blink : 1023px;
+$mq_max_width_tablet_portrait : 990px;
+$mq_max_width_mobile_large : 760px;
+$mq_max_width_mobile : 700px;
+$mq_max_width_mobile_small : 450px;
+$mq_max_height_small : 760px;
+
+
+$color_white: #fff;
+$color_extradark: #000000;
+
+$color_1: #b64a02;
+$color_2: #e67300;
+$color_3: #395482;
+
+
+$font_family_1 : 'DejaVu Sans', sans-serif;
+
+
+//**
+// * Prefixed styles for placeholders
+// *
+// * Usage:
+// * .selector {
+// *   @include placeholder {
+// *     font-style:italic;
+// *     color: white;
+// *     font-weight:100;
+// *   }
+// * }
+// */
+
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  @include optional-at-root('::-webkit-input-placeholder') {
+   @content;
+  }
+  @include optional-at-root(':-moz-placeholder') {
+   @content;
+  }
+  @include optional-at-root('::-moz-placeholder') {
+   @content;
+  }
+  @include optional-at-root(':-ms-input-placeholder') {
+   @content;
+  }
+  @include optional-at-root('::placeholder ') {
+   @content;
+  }
+
+}
+
+// Screen Reader Text
+
+@mixin screen-reader-text() {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+// Mixin for scrollable
+
+@mixin scrollable($x: hidden, $y: auto) {
+  overflow: hidden;
+  overflow-x: $x;
+  overflow-y: $y;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: $color_1 $color-white;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $color_1;
+    border-radius: 20px;
+  }
+}

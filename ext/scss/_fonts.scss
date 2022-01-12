@@ -1,0 +1,50 @@
+
+
+//**
+// * Font face generator
+// *
+// * Accepts:
+// * - $name:   {String} Name of the font
+// * - $path:   {String} Path to the font files
+// * - $weight: {String} Font weight
+// * - $style:  {String} Font style
+// * - $exts:   {String} Font file formats
+// *
+// * Usage:
+// * @include font-face('Foobar Font', path/to/font, 500, normal, eot woff2 woff);
+// *
+// */
+
+ @mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf) {
+    $src: null;
+  
+    $extmods: (
+      eot: "?",
+      svg: "#" + str-replace($name, " ", "_")
+    );
+  
+    $formats: (
+      otf: "opentype",
+      ttf: "truetype"
+    );
+  
+    @each $ext in $exts {
+      $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+      $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+      $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+    }
+  
+    @font-face {
+      font-display: swap;
+      font-family: quote($name);
+      font-style: $style;
+      font-weight: $weight;
+      src: $src;
+    }
+}
+
+$fonts_path : 'fonts/';
+
+
+@include font-face('DejaVu Sans', $fonts_path+'DejaVuSans-Bold-webfont', 600, normal, woff2 woff ttf);
+
