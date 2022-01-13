@@ -3,7 +3,7 @@
   font-family: "DejaVu Sans";
   font-style: normal;
   font-weight: 600;
-  src: url("fonts/DejaVuSans-Bold-webfont.woff2") format("woff2"), url("fonts/DejaVuSans-Bold-webfont.woff") format("woff"), url("fonts/DejaVuSans-Bold-webfont.ttf") format("truetype");
+  src: url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.woff2") format("woff2"), url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.woff") format("woff"), url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.ttf") format("truetype");
 }
 [class^=gam-] {
   font-family: "DejaVu Sans", sans-serif;
@@ -18,7 +18,30 @@
   right: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000;
+  z-index: 1010;
+  pointer-events: none;
+  opacity: 0;
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: #b64a02 #fff;
+  scrollbar-width: thin;
+}
+.gam-page::-webkit-scrollbar {
+  width: 6px;
+}
+.gam-page::-webkit-scrollbar-track {
+  background: transparent;
+}
+.gam-page::-webkit-scrollbar-thumb {
+  background-color: #b64a02;
+  border-radius: 20px;
+}
+
+.gam-body-scoreboard .gam-page--scoreboard {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .gam-button {
