@@ -31,7 +31,9 @@ gameApp.config.isStudent = false;
 gameApp.config.isAnonymous = true;
 gameApp.config.bodyClasses = ['gam-body-scoreboard'];
 
-gameApp.components = {};
+gameApp.config.tags = {
+    gamification_unit: "gamification_unit"
+}
 
 gameApp.text = {
     gamification_go_to_scoreboard : "Go to Scoreboard",
@@ -42,8 +44,185 @@ gameApp.text = {
     gamification_units: "Units",
     gamification_activities: "Activities",
     gamification_completed: "completed",
-    gamification_close: "Close"
+    gamification_close: "Close",
+    gamification_score_brilliant : "Brilliant!",
+    gamification_score_brilliant_subtitle : "Top score!",
+    gamification_score_great : "Great!",
+    gamification_score_great_subtitle : "Try again for a higher score.",
+    gamification_score_well_done : "Well done!",
+    gamification_score_well_done_subtitle : "Try again for a higher score.",
+    gamification_score_not_bad : "Not bad!",
+    gamification_score_not_bad_subtitle : "Try again.",
+    gamification_score_fail : "Oh no!",
+    gamification_score_fail_subtitle : "Try again.",
+    gamification_continue : "Continue",
+    gamification_try_again : "Try again"
 }
+
+gameApp.config.tokens = [
+    {
+        total: 5,
+        intervals: [
+            {
+                minPercent: 0,
+                maxPercent: 24,
+                given: 1,
+                title: gameApp.text.gamification_score_fail,
+                subtitle: gameApp.text.gamification_score_fail_subtitle,
+            },
+            {
+                minPercent: 25,
+                maxPercent: 49,
+                given: 2,
+                title: gameApp.text.gamification_score_not_bad,
+                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
+            },
+            {
+                minPercent: 50,
+                maxPercent: 69,
+                given: 3,
+                title: gameApp.text.gamification_score_well_done,
+                subtitle: gameApp.text.gamification_score_well_done_subtitle,
+            },
+            {
+                minPercent: 70,
+                maxPercent: 99,
+                given: 4,
+                title: gameApp.text.gamification_score_greate,
+                subtitle: gameApp.text.gamification_score_great_subtitle,
+            },
+            {
+                minPercent: 100,
+                maxPercent: 100,
+                given: 5,
+                title: gameApp.text.gamification_score_brilliant,
+                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
+            }
+        ]
+    },
+    {
+        total: 10,
+        intervals: [
+            {
+                minPercent: 0,
+                maxPercent: 24,
+                given: 2,
+                title: gameApp.text.gamification_score_fail,
+                subtitle: gameApp.text.gamification_score_fail_subtitle,
+            },
+            {
+                minPercent: 25,
+                maxPercent: 49,
+                given: 4,
+                title: gameApp.text.gamification_score_not_bad,
+                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
+            },
+            {
+                minPercent: 50,
+                maxPercent: 69,
+                given: 6,
+                title: gameApp.text.gamification_score_well_done,
+                subtitle: gameApp.text.gamification_score_well_done_subtitle,
+            },
+            {
+                minPercent: 70,
+                maxPercent: 99,
+                given: 8,
+                title: gameApp.text.gamification_score_greate,
+                subtitle: gameApp.text.gamification_score_great_subtitle,
+            },
+            {
+                minPercent: 100,
+                maxPercent: 100,
+                given: 10,
+                title: gameApp.text.gamification_score_brilliant,
+                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
+            }
+        ]
+    },
+    {
+        total: 15,
+        intervals: [
+            {
+                minPercent: 0,
+                maxPercent: 24,
+                given: 3,
+                title: gameApp.text.gamification_score_fail,
+                subtitle: gameApp.text.gamification_score_fail_subtitle,
+            },
+            {
+                minPercent: 25,
+                maxPercent: 49,
+                given: 6,
+                title: gameApp.text.gamification_score_not_bad,
+                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
+            },
+            {
+                minPercent: 50,
+                maxPercent: 69,
+                given: 9,
+                title: gameApp.text.gamification_score_well_done,
+                subtitle: gameApp.text.gamification_score_well_done_subtitle,
+            },
+            {
+                minPercent: 70,
+                maxPercent: 99,
+                given: 12,
+                title: gameApp.text.gamification_score_great,
+                subtitle: gameApp.text.gamification_score_great_subtitle,
+            },
+            {
+                minPercent: 100,
+                maxPercent: 100,
+                given: 15,
+                title: gameApp.text.gamification_score_brilliant,
+                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
+            }
+        ]
+    },
+    {
+        total: 25,
+        intervals: [
+            {
+                minPercent: 0,
+                maxPercent: 24,
+                given: 5,
+                title: gameApp.text.gamification_score_fail,
+                subtitle: gameApp.text.gamification_score_fail_subtitle,
+            },
+            {
+                minPercent: 25,
+                maxPercent: 49,
+                given: 10,
+                title: gameApp.text.gamification_score_not_bad,
+                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
+            },
+            {
+                minPercent: 50,
+                maxPercent: 69,
+                given: 15,
+                title: gameApp.text.gamification_score_well_done,
+                subtitle: gameApp.text.gamification_score_well_done_subtitle,
+            },
+            {
+                minPercent: 70,
+                maxPercent: 99,
+                given: 20,
+                title: gameApp.text.gamification_score_greate,
+                subtitle: gameApp.text.gamification_score_great_subtitle,
+            },
+            {
+                minPercent: 100,
+                maxPercent: 100,
+                given: 25,
+                title: gameApp.text.gamification_score_brilliant,
+                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
+            }
+        ]
+    }
+]
+
+gameApp.components = {};
 
 gameApp.courseData = '';
 
@@ -56,6 +235,12 @@ gameApp.config.tree = {
       'page' : 'gam-page--scoreboard'
     }
 }
+
+//----------------------------------//
+//                                  //
+//  UTILS                           //
+//                                  //
+//----------------------------------//
 
 // Start with polyfill
 gameApp.startsWith = function(string1,string2) {
@@ -72,10 +257,12 @@ gameApp.startsWith = function(string1,string2) {
 
 
 
-gameApp.getCourseData = function() {
+gameApp.getCourseData = function(initial) {
 
     if ($('body').hasClass('edit')) return;
-  
+
+    var initApp = typeof initial !== 'undefined' ? initial : false;
+
     // Detect connection in apps
     if (!blink.isApp || (blink.isApp && blink.appVersion >= 4.1)) {
       blink.rest.connection(function(connection) {
@@ -90,6 +277,10 @@ gameApp.getCourseData = function() {
         gameApp.config.isAnonymous = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin() && !blink.user.esAlumno() && !blink.user.esPadre();
 
         console.log(gameApp.courseData);
+
+        if (initApp) {
+            gameApp.initApp();
+        }
     });
 }
 
@@ -108,6 +299,14 @@ gameApp.removeUnusedClass = function(currentClass) {
   
 }
 
+gameApp.openTooltip = function(event, tooltip) {
+    event = event || window.event;
+    var trigger = event.target || event.srcElement;
+    var left = $(trigger).offset().left - 60;
+
+    $(tooltip).css({'left': left}).addClass('--visible');
+}
+
 gameApp.closePage = function(treeIndex) {
 
     var bodyClass = gameApp.config.bodyClasses[treeIndex];
@@ -119,6 +318,59 @@ gameApp.closePage = function(treeIndex) {
     }, 10)
 
     history.pushState("", document.title, window.location.pathname + window.location.search);
+}
+
+gameApp.detectGamificationActivities = function() {
+    var data = gameApp.courseData;
+
+    var gamificationActivities = data.units.filter(function(unit) {
+      var tags = typeof unit.tags !== "undefined" ? unit.tags.split(" ") : [];
+      return tags.indexOf(gameApp.config.tags.gamification_unit.toLowerCase()) > -1;
+    });
+  
+    return gamificationActivities;
+}
+
+gameApp.detectGamificationActivity = function(id) {
+
+    var data = gameApp.courseData;
+    var units = data.units;
+
+    var unit = units.filter(function(item) {
+        return item.id == id;
+    });
+
+    if (!unit.length) return false;
+
+    var tags = typeof unit[0].tags !== "undefined" ? unit[0].tags.split(" ") : [];
+    var isGamificationActivity = tags.indexOf(gameApp.config.tags.gamification_unit) > -1;
+
+    return isGamificationActivity;
+}
+
+gameApp.tokenActivity = function(id) {
+
+    var data = gameApp.courseData;
+    var unit = _.findWhere(data.units, {id: window.idtema.toString()});
+    var subunitIx = _.findIndex(unit.subunits, {id: window.idclase.toString()});
+
+    var subunit = unit.subunits[subunitIx];
+    console.log(subunit);
+    if (!subunit) return false;
+
+    var token = typeof subunit.game_token !== "undefined" ? subunit.game_token : 0;
+
+    return token;
+}
+
+gameApp.openModal = function(modal) {
+   $('body').append(modal);
+   $('body').addClass('gam-body--modal');
+}
+
+gameApp.closeModal = function(idModal) {
+    $('#'+idModal).remove();
+    $('body').removeClass('gam-body--modal');
 }
 
 //----------------------------------//
@@ -172,34 +424,119 @@ gameApp.onChangeHash = function() {
 window.addEventListener("hashchange", gameApp.onChangeHash, false);
 
 
+//----------------------------------//
+//                                  //
+//  Components                      //
+//                                  //
+//----------------------------------//
 
-// Components
+gameApp.components.Button = function(icon, text, onclick, extraClasses) {
+    var iconClass = (icon) ? 'gam-button--icon --icon--'+icon : '';
+    var extraClasses = (extraClasses) ? extraClasses : '';
 
-gameApp.components.ButtonTooltipScoreboard = function() {
-    var button = '<button class="gam-button gam-button--icon --icon--price"><span class="gam-button__text">'+gameApp.text.gamification_go_to_scoreboard+'</span></button>';
+    var button = '<button class="gam-button '+iconClass+' '+extraClasses+'" onclick="'+onclick+'"><span class="gam-button__text">'+text+'</span></button>';
     
-    var totalScore = 2000;
-    var score = '<div class="gam-score"><span class="gam-score__label">'+gameApp.text.gamification_score_label+'</span><span class="gam-score__total">'+totalScore+'</span></div>';
-    var buttonScoreboard = '<button class="gam-button gam-js-goToScoreboard"><span class="gam-button__text">'+gameApp.text.gamification_see_details+'</span></button>';
-    var scoreboardSummary = '<div class="gam-scoreboard-summary">'+score+buttonScoreboard+'</div>';
-    
-    var tooltip = '<div class="gam-tooltip">'+scoreboardSummary+'</div>';
-
-    var component = '<div class="gam-tooltip-wrapper">'+button+tooltip+'</div>';
+    var component = button;
 
     return component;
 }
 
+gameApp.components.ButtonScoreboard = function() {
+    var button = '<button class="gam-button gam-button--icon --icon--price" onclick="gameApp.openTooltip(event, \'#gam-tooltip-scoreboard\');"><span class="gam-button__text">'+gameApp.text.gamification_go_to_scoreboard+'</span></button>';
+    
+    var component = button;
 
-//Initializers
+    return component;
+}
+
+gameApp.components.TooltipScoreboard = function() {
+    
+    var totalScore = 2000;
+    var score = '<div class="gam-score"><span class="gam-score__label">'+gameApp.text.gamification_score_label+'</span><span class="gam-score__total">'+totalScore+'</span></div>';
+    var buttonScoreboard = gameApp.components.Button(false, gameApp.text.gamification_see_details, false, 'gam-js-goToScoreboard');
+    
+    var scoreboardSummary = '<div class="gam-scoreboard-summary">'+score+buttonScoreboard+'</div>';
+    
+    var tooltip = '<div class="gam-tooltip" id="gam-tooltip-scoreboard"><div class="gam-tooltip__inner">'+scoreboardSummary+'</div></div>';
+
+    var component = tooltip;
+
+    return component;
+}
+
+gameApp.components.TokensBadge = function(tokens) {
+    
+    var badge = '<div class="gam-score-badge"><div class="gam-score-badge__inner">'+tokens+'</div></div>';
+    var component = badge;
+    
+    return component;
+}
+
+gameApp.components.Modal = function(id, header, body, footer, extraClasses) {
+
+    var component = '<div class="gam-modal '+extraClasses+'" id="'+id+'"><div class="gam-modal__inner"><div class="gam-modal__header">'+header+'</div><div class="gam-modal__body">'+body+'</div><div class="gam-modal__footer">'+footer+'</div></div></div>';
+    return component;
+}
+
+//----------------------------------//
+//                                  //
+//  Gamification Modals             //
+//                                  //
+//----------------------------------//
+
+
+gameApp.createModalScore = function(tokens, percent) {
+
+    var tokenInfo = gameApp.config.tokens.filter(function(range) {
+        return range.total === tokens;
+    });
+
+    var result = tokenInfo[0].intervals.filter(function(interval) {
+        return interval.minPercent <= percent && interval.maxPercent >= percent;
+    });
+
+    var title = result[0].title;
+    var subtitle = result[0].subtitle;
+    var given = result[0].given;
+
+
+    var suffix = window.idtema;
+    var id = 'gam-modal-score-'+suffix;
+    var header = '<h1 class="gam-title">'+title+'</h1>';
+    var prize = '<div class="gam-prize">'+gameApp.text.gamification_score_label+'<span>'+given+'</span></div>';
+    var message = '<div class="gam-subtitle">'+subtitle+'</div>';
+    var body = prize+message;
+    var buttonRepeat = gameApp.components.Button(false, gameApp.text.gamification_try_again, "gameApp.closeModal('"+id+"')", false);
+    var buttonContinue = gameApp.components.Button(false, gameApp.text.gamification_continue, 'cerrarIframe()', false);
+    
+    
+    var footer = (percent !== 100) ? buttonRepeat+buttonContinue : buttonContinue;
+
+    var extraClasses = 'gam-modal-prize';
+
+    var modal = gameApp.components.Modal(id, header, body, footer, extraClasses);
+
+    gameApp.openModal(modal);
+
+}
+
+
+
+//----------------------------------//
+//                                  //
+//  Initializers                    //
+//                                  //
+//----------------------------------//
+
 
 gameApp.initBook = function() {
 
-    var buttonTooltip = gameApp.components.ButtonTooltipScoreboard();
+    var button = gameApp.components.ButtonScoreboard();
+    var tooltip = gameApp.components.TooltipScoreboard();
 
     var navbar = $('.navbar');
 
-    navbar.prepend(buttonTooltip);
+    navbar.prepend(button).append(tooltip);
 
 }
 
@@ -260,27 +597,74 @@ gameApp.loadScoreboard = function() {
 
 }
 
-  
+gameApp.initActivity = function(id) {
+    console.log("Gamification ACtivity loaded");
 
-jQuery(function() { 
+    var tokens = gameApp.tokenActivity(window.idcurso);
+    var badge = gameApp.components.TokensBadge(tokens);
+    var header = $('#actividad .item-container .header');
 
-    gameApp.getCourseData();
+    blink.events.on('section:shown', function() {
+        header.append(badge);
+    });
 
-    console.log("Testing");
+    blink.events.on('slide:update:after', function() {
+        console.log("Slide:update:after");
+        //gameApp.createModalScore(tokens, 0);
 
+    });
+
+}
+
+gameApp.initApp = function() {
 
     var ishtmlBook = $('body').hasClass('body_htmlBook');
-
-    if (ishtmlBook) {
+    var isActivity = $('body').hasClass('body_clase');
+    var isGamificationActivity = gameApp.detectGamificationActivity(window.idtema);
+    
+    console.log(isGamificationActivity, window.idtema);
+    
+    if (isActivity && isGamificationActivity) {
+        gameApp.initActivity(window.idtema);   
+    } else if (ishtmlBook) {
         gameApp.initBook();
     }
 
     gameApp.initScoreboard();
 
+}
+
+  
+
+jQuery(function() { 
+
+    var dataLoaded = gameApp.courseData !== '';
+
+    if (dataLoaded) {
+        gameApp.initApp();
+    } else {
+        gameApp.getCourseData(true);
+    }
+
+    console.log("Testing2");
 
     $('body').on('click', '.gam-js-goToScoreboard', function(e) {
         e.preventDefault();
         window.location.hash = gameApp.config.tree[0].hash;
     });
+
+    $('body').on('click', function(event) {
+        $target = $(event.target);
+        if(!$target.closest('.gam-tooltip').length && !$target.closest('.gam-button').length) {
+            $('.gam-tooltip.--visible').removeClass('--visible');
+        }
+    });
+
+
+    $('body').on('click', '.js-correct', function(e) {
+        var tokens = gameApp.tokenActivity(window.idcurso);
+        gameApp.createModalScore(tokens, 0);
+    });
+
 
 });

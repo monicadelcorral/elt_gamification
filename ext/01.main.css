@@ -3,7 +3,7 @@
   font-family: "DejaVu Sans";
   font-style: normal;
   font-weight: 600;
-  src: url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.woff2") format("woff2"), url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.woff") format("woff"), url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.ttf") format("truetype");
+  src: url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.woff") format("woff"), url("fonts/dejavu-sans/DejaVuSans-Bold-webfont.ttf") format("truetype");
 }
 [class^=gam-] {
   font-family: "DejaVu Sans", sans-serif;
@@ -44,6 +44,21 @@
   pointer-events: auto;
 }
 
+.gam-title {
+  font-size: 48px;
+  font-weight: bold;
+  line-height: 0.63;
+  color: #e67300;
+  margin: 0 0 30px;
+}
+
+.gam-subtitle {
+  font-size: 21px;
+  line-height: 1.52;
+  color: #2e4469;
+  margin: 0;
+}
+
 .gam-button {
   max-width: 100%;
   border-radius: 100px;
@@ -57,7 +72,7 @@
   align-items: center;
   position: relative;
   background: transparent;
-  transition-property: color, background-color, background-position, border-color, box-shadow, opacity, height;
+  transition-property: color, background-color, background-position, border-color, bgam-shadow, opacity, height;
   transition-duration: 0.4s;
   transition-timing-function: ease-in;
   -webkit-appearance: none;
@@ -112,7 +127,7 @@
   word-wrap: normal !important;
 }
 .gam-button--icon.--icon--price {
-  background-image: url(images/price.png);
+  background-image: url(images/prize.png);
 }
 
 .gam-tooltip {
@@ -122,22 +137,173 @@
   background: #fff;
   color: #b64a02;
   border-radius: 100px;
-  padding: 10px 24px;
+  padding: 0;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s linear, transform 0.3s linear;
+}
+.gam-tooltip__inner {
+  background: #fff;
+  padding: 10px 14px;
+  border-radius: 100px;
+  position: relative;
+  z-index: 10;
+}
+.gam-tooltip.--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -20px);
+}
+.gam-tooltip::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 12px solid #fff;
+  position: absolute;
+  bottom: -12px;
+  left: 60px;
+  z-index: 1;
 }
 
 .gam-score {
-  background: url(images/price.png) 0 center no-repeat;
+  background: url(images/prize.png) 0 center no-repeat;
   background-size: contain;
   min-height: 50px;
-  padding: 0 0 0 60px;
+  padding: 0 0 0 72px;
+}
+.gam-score__label {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.4;
+  display: block;
+}
+.gam-score__total {
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1.43;
+  color: #e67300;
+  display: block;
 }
 
 .gam-scoreboard-summary {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 10px 2px;
+}
+.gam-scoreboard-summary > * {
+  margin: 0 8px;
+}
+
+.gam-score-badge {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 30px;
+  line-height: 1px;
+  color: #e67300;
+  font-weight: bold;
+  background: url(images/prize.png) 10px center no-repeat #efefef;
+  background-size: 40px auto;
+  min-height: 56px;
+  padding: 5px 10px 5px 64px;
+  border-radius: 10px;
+}
+#actividad .carousel-inner .item-container .header .gam-score-badge {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.gam-prize {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #e67300;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.4;
+  text-align: center;
+}
+.gam-prize span {
+  font-size: 30px;
+  line-height: 1em;
+  display: block;
+}
+
+.gam-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.65);
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.gam-modal__inner {
+  background: #fff;
+  padding: 0;
+  width: 520px;
+  max-width: 90vw;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+.gam-modal__header {
+  padding: 30px 30px 20px;
+  text-align: center;
+}
+.gam-modal__body {
+  padding: 20px 30px 20px;
+  text-align: center;
+}
+.gam-modal__footer {
+  padding: 30px 30px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+.gam-modal.gam-modal-prize .gam-modal__header {
+  padding-top: 60px;
+}
+.gam-modal.gam-modal-prize .gam-modal__body {
+  display: flex;
+  justify-content: flex-end;
+  align-self: flex-end;
+  flex-wrap: wrap;
+  min-height: 180px;
+}
+.gam-modal.gam-modal-prize .gam-modal__body .gam-subtitle {
+  min-width: 100%;
+  position: relative;
+  top: 60px;
+}
+.gam-modal.gam-modal-prize .gam-modal__inner {
+  background-image: url(images/prize-background.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 184px auto;
+}
+.gam-modal.gam-modal-prize .gam-modal__inner::after {
+  content: "";
+  display: block;
+  width: 108px;
+  height: 108px;
+  background: url(images/prize.png) center center no-repeat;
+  background-size: contain;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 /*# sourceMappingURL=01.main.css.map */

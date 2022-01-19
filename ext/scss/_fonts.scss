@@ -46,5 +46,5 @@
 $fonts_path : 'fonts/';
 
 
-@include font-face('DejaVu Sans', $fonts_path+'dejavu-sans/DejaVuSans-Bold-webfont', 600, normal, woff2 woff ttf);
+@include font-face('DejaVu Sans', $fonts_path+'dejavu-sans/DejaVuSans-Bold-webfont', 600, normal, woff ttf);
 
