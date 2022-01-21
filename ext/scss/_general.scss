@@ -33,6 +33,14 @@
     line-height: 0.63;
     color: $color_2;
     margin: 0 0 30px;
+
+    span {
+        font-size: 30px;
+        line-height: 1.2em;
+        font-weight: 400;
+        display: block;
+        margin: 0 auto 12px;
+    }
 }
 
 .gam-subtitle {

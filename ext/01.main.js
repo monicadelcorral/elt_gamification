@@ -29,10 +29,12 @@ gameApp.config.isDEV = (ENTORNO === 'DEV');
 gameApp.config.hasConnection = true;
 gameApp.config.isStudent = false;
 gameApp.config.isAnonymous = true;
+gameApp.config.animationsDuration = 250;
 gameApp.config.bodyClasses = ['gam-body-scoreboard'];
 
 gameApp.config.tags = {
-    gamification_unit: "gamification_unit"
+    gamification_unit: "gamification_unit",
+    gamification_bonus : "gamification_bonus"
 }
 
 gameApp.text = {
@@ -56,7 +58,14 @@ gameApp.text = {
     gamification_score_fail : "Oh no!",
     gamification_score_fail_subtitle : "Try again.",
     gamification_continue : "Continue",
-    gamification_try_again : "Try again"
+    gamification_try_again : "Try again",
+    gamification_ok: "Ok",
+    gamification_start_activity : "Go to activity",
+    gamification_bonus_locked : "<span>Bonus activity</span> locked!",
+    gamification_bonus_unlocked : "<span>Bonus activity</span> unlocked!",
+    gamification_bonus_locked_subtitle : "Oops! Complete all the activities on this page to unlock the Bonus activity.",
+    gamification_bonus_unlocked_subtitle : "Win 25 bonus diamonds!",
+
 }
 
 gameApp.config.tokens = [
@@ -355,7 +364,7 @@ gameApp.tokenActivity = function(id) {
     var subunitIx = _.findIndex(unit.subunits, {id: window.idclase.toString()});
 
     var subunit = unit.subunits[subunitIx];
-    console.log(subunit);
+
     if (!subunit) return false;
 
     var token = typeof subunit.game_token !== "undefined" ? subunit.game_token : 0;
@@ -363,14 +372,56 @@ gameApp.tokenActivity = function(id) {
     return token;
 }
 
-gameApp.openModal = function(modal) {
+gameApp.getGrade = function() {
+    
+    var grade = (typeof window.actividades[window.idclase] === 'undefined') ? 0 : window.actividades[window.idclase].clasificacion;
+    return grade;
+}
+
+gameApp.detectBonusActivity = function() {
+
+    var data = gameApp.courseData;
+    var unit = _.findWhere(data.units, {id: window.idtema.toString()});
+    var subunitIx = _.findIndex(unit.subunits, {id: window.idclase.toString()});
+
+    var subunit = unit.subunits[subunitIx];
+    
+    if (!subunit.length) return false;
+
+    var tags = typeof subunit.tags !== "undefined" ? subunit.tags.split(" ") : [];
+    var isBonusGamificationActivity = tags.indexOf(gameApp.config.tags.gamification_bonus) > -1;
+
+    return isBonusGamificationActivity;
+}
+
+gameApp.getSeguimientoCurso = function() { //TODO: REVIEW
+    var urlSeguimiento = '/include/javascript/seguimientoCurso.js.php?idcurso=' + idcurso;
+
+    loadScript(urlSeguimiento, true, (function(data) {
+    console.log(data);
+    
+    }).bind(this));
+}
+
+gameApp.openModal = function(modal, id) {
    $('body').append(modal);
    $('body').addClass('gam-body--modal');
+    console.log(modal);
+
+   setTimeout(function() {
+       $('#'+id).addClass('--open');
+   }, gameApp.config.animationsDuration);
 }
 
 gameApp.closeModal = function(idModal) {
-    $('#'+idModal).remove();
-    $('body').removeClass('gam-body--modal');
+    $('#'+idModal).removeClass('--open');
+
+    setTimeout(function() {
+        $('#'+idModal).remove();
+        $('body').removeClass('gam-body--modal');
+    }, gameApp.config.animationsDuration);
+
+
 }
 
 //----------------------------------//
@@ -506,9 +557,13 @@ gameApp.createModalScore = function(tokens, percent) {
     var prize = '<div class="gam-prize">'+gameApp.text.gamification_score_label+'<span>'+given+'</span></div>';
     var message = '<div class="gam-subtitle">'+subtitle+'</div>';
     var body = prize+message;
+    var detectIfBonusIsOpen = true; //TODO
+
     var buttonRepeat = gameApp.components.Button(false, gameApp.text.gamification_try_again, "gameApp.closeModal('"+id+"')", false);
-    var buttonContinue = gameApp.components.Button(false, gameApp.text.gamification_continue, 'cerrarIframe()', false);
-    
+    var buttonContinueNotBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, 'cerrarIframe()', false);
+    var buttonContinueBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, "gameApp.closeModal('"+id+"'); gameApp.createModalBonus()", false);
+
+    var buttonContinue = (detectIfBonusIsOpen) ? buttonContinueBonus : buttonContinueNotBonus ;
     
     var footer = (percent !== 100) ? buttonRepeat+buttonContinue : buttonContinue;
 
@@ -516,10 +571,44 @@ gameApp.createModalScore = function(tokens, percent) {
 
     var modal = gameApp.components.Modal(id, header, body, footer, extraClasses);
 
-    gameApp.openModal(modal);
+
+    gameApp.openModal(modal, id);
 
 }
 
+gameApp.createModalBonus = function() {
+
+    var isLocked = false; //TODO
+    var insideBonus = false; //TODO
+
+    var title = (isLocked) ? gameApp.text.gamification_bonus_locked :  gameApp.text.gamification_bonus_unlocked;
+    var subtitle = (isLocked) ? gameApp.text.gamification_bonus_locked_subtitle :  gameApp.text.gamification_bonus_unlocked_subtitle;
+
+
+    var suffix = window.idtema;
+    var id = 'gam-modal-bonus-'+suffix;
+    var header = '<h1 class="gam-title">'+title+'</h1>';
+    var lock = '<div class="gam-lock"><span class="gam-lock__top"></span></div>';
+    var message = '<div class="gam-subtitle">'+subtitle+'</div>';
+    var body = lock+message;
+
+    var bonusId = 100323879; //TODO
+
+    var buttonStartActivityInside = gameApp.components.Button(false, gameApp.text.gamification_ok, "gameApp.closeModal('"+id+"')", false);
+    var buttonStartACtivityOutside = gameApp.components.Button(false, gameApp.text.gamification_start_activity, "gameApp.goToActivity('"+bonusId+"')", false);
+    var buttonStartActivity = (insideBonus) ?  buttonStartActivityInside : buttonStartACtivityOutside;
+
+    var buttonContinue = gameApp.components.Button(false, gameApp.text.gamification_continue, 'cerrarIframe()', false);
+    
+    var footer = (isLocked) ? buttonContinue : buttonStartActivity+buttonContinue;
+
+    var extraClasses = (isLocked) ? 'gam-modal-lock --locked' : 'gam-modal-lock --unlocked';
+
+    var modal = gameApp.components.Modal(id, header, body, footer, extraClasses);
+
+    gameApp.openModal(modal, id);
+
+}
 
 
 //----------------------------------//
@@ -597,6 +686,10 @@ gameApp.loadScoreboard = function() {
 
 }
 
+gameApp.initBonusActivity = function() {
+    gameApp.createModalBonus();
+}
+
 gameApp.initActivity = function(id) {
     console.log("Gamification ACtivity loaded");
 
@@ -604,12 +697,33 @@ gameApp.initActivity = function(id) {
     var badge = gameApp.components.TokensBadge(tokens);
     var header = $('#actividad .item-container .header');
 
+    var isBonus = gameApp.detectBonusActivity();
+
+
     blink.events.on('section:shown', function() {
-        header.append(badge);
+        if (tokens > 0) {
+            header.append(badge);
+        }
     });
 
     blink.events.on('slide:update:after', function() {
         console.log("Slide:update:after");
+        //var percent = gameApp.getGrade();
+        //gameApp.createModalScore(tokens, percent);
+
+    });
+
+    blink.events.on('course:refresh', function(e) {
+        console.log(e);
+        console.log("course:refresh");
+        //gameApp.createModalScore(tokens, 0);
+
+    });
+
+
+    blink.events.on('gamification:savedScore', function(e, data) {
+        console.log(e, data);
+        console.log("gamification:savedScore");
         //gameApp.createModalScore(tokens, 0);
 
     });
@@ -639,7 +753,8 @@ gameApp.initApp = function() {
 jQuery(function() { 
 
     var dataLoaded = gameApp.courseData !== '';
-
+    console.log(dataLoaded);
+    
     if (dataLoaded) {
         gameApp.initApp();
     } else {

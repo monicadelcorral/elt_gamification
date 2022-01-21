@@ -51,6 +51,13 @@
   color: #e67300;
   margin: 0 0 30px;
 }
+.gam-title span {
+  font-size: 30px;
+  line-height: 1.2em;
+  font-weight: 400;
+  display: block;
+  margin: 0 auto 12px;
+}
 
 .gam-subtitle {
   font-size: 21px;
@@ -239,7 +246,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: transparent;
   width: 100%;
   height: 100%;
   z-index: 10000;
@@ -247,6 +254,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.25s linear;
+}
+.gam-modal.--open {
+  background-color: rgba(0, 0, 0, 0.65);
 }
 .gam-modal__inner {
   background: #fff;
@@ -255,6 +266,13 @@
   max-width: 90vw;
   border-radius: 20px;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+  transition: transform 0.25s ease, opacity 0.25s linear;
+  transform: translateY(-200px);
+  opacity: 0;
+}
+.--open .gam-modal__inner {
+  transform: translateY(0);
+  opacity: 1;
 }
 .gam-modal__header {
   padding: 30px 30px 20px;
@@ -267,9 +285,15 @@
 .gam-modal__footer {
   padding: 30px 30px 30px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   text-align: center;
+}
+.gam-modal__footer .gam-button:first-child {
+  margin-right: auto;
+}
+.gam-modal__footer .gam-button:last-child {
+  margin-left: auto;
 }
 .gam-modal.gam-modal-prize .gam-modal__header {
   padding-top: 60px;
@@ -304,6 +328,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
+}
+.gam-modal.gam-modal-lock .gam-modal__inner {
+  background-image: url(images/prize-background.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 184px auto;
+}
+.gam-modal.gam-modal-lock .gam-modal__body .gam-lock {
+  min-height: 180px;
 }
 
 /*# sourceMappingURL=01.main.css.map */
