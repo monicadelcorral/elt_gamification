@@ -9,6 +9,21 @@
   font-family: "DejaVu Sans", sans-serif;
 }
 
+body.gam--locked #actividad {
+  pointer-events: none !important;
+}
+body.gam--locked::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9990;
+  pointer-events: all;
+}
+
 .gam-page {
   background: #fff;
   position: fixed;

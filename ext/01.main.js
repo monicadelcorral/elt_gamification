@@ -286,7 +286,10 @@ gameApp.getCourseData = function(initial) {
         gameApp.config.isAnonymous = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin() && !blink.user.esAlumno() && !blink.user.esPadre();
 
         console.log(gameApp.courseData);
-
+        
+        gameApp.config.isStudent = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin();
+        gameApp.config.isAnonymous = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin() && !blink.user.esAlumno() && !blink.user.esPadre();
+    
         if (initApp) {
             gameApp.initApp();
         }
@@ -382,17 +385,41 @@ gameApp.detectBonusActivity = function() {
 
     var data = gameApp.courseData;
     var unit = _.findWhere(data.units, {id: window.idtema.toString()});
-    var subunitIx = _.findIndex(unit.subunits, {id: window.idclase.toString()});
-
-    var subunit = unit.subunits[subunitIx];
+    var subunit = _.findWhere(unit.subunits, {id: window.idclase.toString()});
     
-    if (!subunit.length) return false;
+    if (!subunit) return false;
 
     var tags = typeof subunit.tags !== "undefined" ? subunit.tags.split(" ") : [];
+
     var isBonusGamificationActivity = tags.indexOf(gameApp.config.tags.gamification_bonus) > -1;
 
     return isBonusGamificationActivity;
 }
+
+gameApp.detectBonusLockStatus = function() { //TODO
+    
+    var data = gameApp.courseData;
+    var unit = _.findWhere(data.units, {id: window.idtema.toString()});
+    var subunit = _.findWhere(unit.subunits, {id: window.idclase.toString()});
+    
+    var regularActivities = unit.subunits.filter(function(subunit) {
+        var tags = typeof subunit.tags !== "undefined" ? subunit.tags.split(" ") : [];
+        var tokens = typeof subunit.game_token !== "undefined" ? subunit.game_token : false;
+        return tags.indexOf(gameApp.config.tags.gamification_bonus) < 0 && tokens;
+    });
+
+
+    var unitActivitiesId = _.pluck(regularActivities, 'id');
+    console.log(unitActivitiesId);
+    var activitiesDone = typeof window.actividades !== "undefined" ? window.actividades : [];
+    var activitiesDoneId = _.pluck(activitiesDone, 'id');
+
+    var isUnlocked = _.isEqual(unitActivitiesId.sort(), activitiesDoneId.sort());
+    
+    console.log(isUnlocked);
+
+}
+
 
 gameApp.getSeguimientoCurso = function() { //TODO: REVIEW
     var urlSeguimiento = '/include/javascript/seguimientoCurso.js.php?idcurso=' + idcurso;
@@ -403,22 +430,25 @@ gameApp.getSeguimientoCurso = function() { //TODO: REVIEW
     }).bind(this));
 }
 
-gameApp.openModal = function(modal, id) {
+gameApp.openModal = function(modal, id, extraClassBody) {
    $('body').append(modal);
    $('body').addClass('gam-body--modal');
-    console.log(modal);
+   $('body').addClass(extraClassBody);
+    
+   console.log(modal);
 
    setTimeout(function() {
        $('#'+id).addClass('--open');
    }, gameApp.config.animationsDuration);
 }
 
-gameApp.closeModal = function(idModal) {
+gameApp.closeModal = function(idModal, extraClassBody) {
     $('#'+idModal).removeClass('--open');
 
     setTimeout(function() {
         $('#'+idModal).remove();
         $('body').removeClass('gam-body--modal');
+        $('body').removeClass(extraClassBody);
     }, gameApp.config.animationsDuration);
 
 
@@ -578,12 +608,13 @@ gameApp.createModalScore = function(tokens, percent) {
 
 gameApp.createModalBonus = function() {
 
-    var isLocked = false; //TODO
+    var isLocked = gameApp.detectBonusLockStatus();
     var insideBonus = false; //TODO
 
     var title = (isLocked) ? gameApp.text.gamification_bonus_locked :  gameApp.text.gamification_bonus_unlocked;
     var subtitle = (isLocked) ? gameApp.text.gamification_bonus_locked_subtitle :  gameApp.text.gamification_bonus_unlocked_subtitle;
 
+    var extraClassBody = 'gam--locked';
 
     var suffix = window.idtema;
     var id = 'gam-modal-bonus-'+suffix;
@@ -594,7 +625,7 @@ gameApp.createModalBonus = function() {
 
     var bonusId = 100323879; //TODO
 
-    var buttonStartActivityInside = gameApp.components.Button(false, gameApp.text.gamification_ok, "gameApp.closeModal('"+id+"')", false);
+    var buttonStartActivityInside = gameApp.components.Button(false, gameApp.text.gamification_ok, "gameApp.closeModal('"+id+"')", false, extraClassBody);
     var buttonStartACtivityOutside = gameApp.components.Button(false, gameApp.text.gamification_start_activity, "gameApp.goToActivity('"+bonusId+"')", false);
     var buttonStartActivity = (insideBonus) ?  buttonStartActivityInside : buttonStartACtivityOutside;
 
@@ -605,8 +636,8 @@ gameApp.createModalBonus = function() {
     var extraClasses = (isLocked) ? 'gam-modal-lock --locked' : 'gam-modal-lock --unlocked';
 
     var modal = gameApp.components.Modal(id, header, body, footer, extraClasses);
-
-    gameApp.openModal(modal, id);
+    
+    gameApp.openModal(modal, id, extraClassBody);
 
 }
 
@@ -687,7 +718,9 @@ gameApp.loadScoreboard = function() {
 }
 
 gameApp.initBonusActivity = function() {
-    gameApp.createModalBonus();
+    if (gameApp.config.isStudent || gameApp.config.isDEV) {
+        gameApp.createModalBonus();
+    }
 }
 
 gameApp.initActivity = function(id) {
@@ -699,6 +732,9 @@ gameApp.initActivity = function(id) {
 
     var isBonus = gameApp.detectBonusActivity();
 
+    if (isBonus) {
+        gameApp.initBonusActivity();
+    }
 
     blink.events.on('section:shown', function() {
         if (tokens > 0) {
