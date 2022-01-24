@@ -415,8 +415,9 @@ gameApp.detectBonusLockStatus = function() { //TODO
     var activitiesDoneId = _.pluck(activitiesDone, 'id');
 
     var isUnlocked = _.isEqual(unitActivitiesId.sort(), activitiesDoneId.sort());
-    
     console.log(isUnlocked);
+    
+    return !isUnlocked;
 
 }
 
