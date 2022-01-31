@@ -257,6 +257,64 @@ body.gam--locked::after {
   display: block;
 }
 
+@keyframes sunrays {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(359deg);
+    opacity: 0.5;
+  }
+}
+@keyframes diamond {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
+@keyframes lock {
+  0% {
+    transform: translateY(-60px);
+  }
+  75% {
+    transform: translateY(-60px);
+  }
+  100% {
+    transform: translateY(-40px);
+  }
+}
+@keyframes unlock {
+  0% {
+    transform: translateY(-40px) rotateY(0deg);
+  }
+  75% {
+    transform: translateY(-60px) rotateY(0deg);
+  }
+  100% {
+    transform: translateY(-60px) rotateY(180deg);
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.9);
+  }
+}
 .gam-modal {
   position: fixed;
   top: 0;
@@ -304,6 +362,9 @@ body.gam--locked::after {
   align-items: center;
   text-align: center;
 }
+.gam-modal__footer .gam-button {
+  min-width: 134px;
+}
 .gam-modal__footer .gam-button:first-child {
   margin-right: auto;
 }
@@ -326,10 +387,23 @@ body.gam--locked::after {
   top: 60px;
 }
 .gam-modal.gam-modal-prize .gam-modal__inner {
+  position: relative;
+}
+.gam-modal.gam-modal-prize .gam-modal__inner::before {
+  content: "";
   background-image: url(images/prize-background.png);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 184px auto;
+  animation: sunrays 4s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -102px;
+  margin-top: -102px;
+  width: 200px;
+  height: 200px;
+  z-index: 1;
 }
 .gam-modal.gam-modal-prize .gam-modal__inner::after {
   content: "";
@@ -341,17 +415,95 @@ body.gam--locked::after {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  margin-top: -54px;
+  margin-left: -54px;
   pointer-events: none;
+  z-index: 5;
+  animation: diamond 2s linear infinite;
 }
 .gam-modal.gam-modal-lock .gam-modal__inner {
+  position: relative;
+}
+.gam-modal.gam-modal-lock .gam-modal__inner::before {
+  content: "";
   background-image: url(images/prize-background.png);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 184px auto;
+  animation: sunrays 4s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -102px;
+  margin-top: -102px;
+  width: 200px;
+  height: 200px;
+  z-index: 1;
+}
+.gam-modal.gam-modal-lock .gam-modal__body {
+  position: relative;
+  z-index: 10;
 }
 .gam-modal.gam-modal-lock .gam-modal__body .gam-lock {
   min-height: 180px;
+}
+.gam-modal.gam-modal-lock .gam-modal__body .gam-lock::after {
+  content: "";
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 10;
+  width: 86px;
+  height: 86px;
+  background: url(images/lock-bottom.png) center bottom no-repeat;
+  background-size: 86px auto;
+}
+.gam-modal.gam-modal-lock .gam-modal__body .gam-lock__top {
+  display: block;
+  background: url(images/lock-top.png) center bottom no-repeat;
+  background-size: 72.5px auto;
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  left: 50%;
+  margin-left: -36px;
+  animation: unlock 0.5s linear forwards;
+  animation-delay: 0.25s;
+  transform-origin: 20px top;
+  width: 75px;
+  height: 164px;
+}
+.gam-modal.gam-modal-lock.--unlocked .gam-subtitle::after {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 25px;
+  background: url(images/prize.png) 0 center no-repeat;
+  background-size: contain;
+}
+.gam-modal.gam-modal-lock.--locked .gam-button {
+  border: 1px solid #fff;
+}
+.gam-modal.gam-modal-lock.--locked .gam-modal__inner {
+  background: #2e4469;
+  color: #fff;
+}
+.gam-modal.gam-modal-lock.--locked .gam-modal__inner .gam-title,
+.gam-modal.gam-modal-lock.--locked .gam-modal__inner .gam-subtitle {
+  color: #fff;
+}
+.gam-modal.gam-modal-lock.--locked .gam-modal__inner::before {
+  content: none;
+}
+.gam-modal.gam-modal-lock.--locked .gam-modal__body .gam-lock {
+  animation: pulse 2s linear infinite;
+  animation-delay: 0.25s;
+  min-height: 220px;
+  margin-top: -100px;
+}
+.gam-modal.gam-modal-lock.--locked .gam-modal__body .gam-lock__top {
+  animation: lock 0.5s linear forwards;
 }
 
 /*# sourceMappingURL=01.main.css.map */

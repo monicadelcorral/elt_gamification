@@ -205,6 +205,81 @@
 
 // MODALS
 
+@keyframes sunrays {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: rotate(359deg);
+
+    opacity: 0.5;
+  }
+}
+
+
+@keyframes diamond {
+  0% {
+    transform: scale(0.9);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.9);
+  }
+}
+
+@keyframes lock {
+  0% {
+    transform: translateY(-60px);
+  }
+
+  75% {
+    transform: translateY(-60px);
+  }
+
+  100% {
+    transform: translateY(-40px);
+  }
+}
+
+
+@keyframes unlock {
+  0% {
+    transform: translateY(-40px) rotateY(0deg);
+  }
+
+  75% {
+    transform: translateY(-60px) rotateY(0deg);
+  }
+
+  100% {
+    transform: translateY(-60px) rotateY(180deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0.9);
+  }
+}
 
 .gam-modal {
   position: fixed;
@@ -261,6 +336,8 @@
     text-align: center;
 
     .gam-button {
+      min-width: 134px;
+      
       &:first-child {
         margin-right: auto;
       }
@@ -291,11 +368,23 @@
     }
 
     .gam-modal__inner {
-      background-image: url(images/prize-background.png);
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: 184px auto;
-
+      position: relative;
+      &::before {
+        content: "";
+        background-image: url(images/prize-background.png);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 184px auto;
+        animation: sunrays 4s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -102px;
+        margin-top: -102px;
+        width: 200px;
+        height: 200px;
+        z-index: 1;
+      }
       &::after {
         content: '';
         display: block;
@@ -306,8 +395,11 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        margin-top: -54px;
+        margin-left: -54px;
         pointer-events: none;
+        z-index: 5;
+        animation: diamond 2s linear infinite;
       }
     }
     
@@ -315,16 +407,105 @@
   &.gam-modal-lock {
 
     .gam-modal__inner {
-      background-image: url(images/prize-background.png);
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: 184px auto;
+      position: relative;
+
+      &::before {
+        content: "";
+        background-image: url(images/prize-background.png);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 184px auto;
+        animation: sunrays 4s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -102px;
+        margin-top: -102px;
+        width: 200px;
+        height: 200px;
+        z-index: 1;
+      }
     }
 
     .gam-modal__body {
+      position: relative;
+      z-index: 10;
 
       .gam-lock {
         min-height: 180px;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 100px;
+          left: 50%;
+          transform: translate(-50%, 0);
+          z-index: 10;
+          width: 86px;
+          height: 86px;
+          background: url(images/lock-bottom.png) center bottom no-repeat;
+          background-size: 86px auto;
+        }
+
+        &__top {
+          display: block;
+          background: url(images/lock-top.png) center bottom no-repeat;
+          background-size: 72.5px auto;
+          position: absolute;
+          z-index: 1;
+          top: 8px;
+          left: 50%;
+          margin-left: -36px;
+          animation: unlock 0.5s linear forwards;
+          animation-delay: .25s;
+          transform-origin: 20px top;
+          width: 75px;
+          height: 164px;
+        }
+      }
+    }
+    &.--unlocked {
+      .gam-subtitle {
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 30px;
+          height: 25px;
+          background: url(images/prize.png) 0 center no-repeat;
+          background-size: contain;
+        }
+      }
+    }
+    &.--locked {
+
+      .gam-button {
+        border: 1px solid $color_white;
+      }
+
+      .gam-modal__inner {
+        background: $color_5;
+        color: $color_white;
+
+        .gam-title,
+        .gam-subtitle {
+          color: $color_white;
+        }
+
+        &::before {
+          content: none;
+        }
+      }
+      .gam-modal__body {
+        .gam-lock {
+          animation: pulse 2s linear infinite;
+          animation-delay: .25s;
+          min-height: 220px;
+          margin-top: -100px;
+
+          &__top {
+            animation: lock 0.5s linear forwards;
+          }
+        }
       }
     }
   }
