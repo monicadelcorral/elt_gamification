@@ -315,10 +315,7 @@ gameApp.getCourseData = function(initial) {
         gameApp.config.isAnonymous = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin() && !blink.user.esAlumno() && !blink.user.esPadre();
 
         console.log(gameApp.courseData);
-        
-        gameApp.config.isStudent = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin();
-        gameApp.config.isAnonymous = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin() && !blink.user.esAlumno() && !blink.user.esPadre();
-    
+            
         if (initApp) {
             gameApp.initApp();
         }
@@ -524,8 +521,6 @@ gameApp.closeModal = function(idModal, extraClassBody) {
         $('body').removeClass('gam-body--modal');
         $('body').removeClass(extraClassBody);
     }, gameApp.config.animationsDuration);
-
-
 }
 
 //----------------------------------//
@@ -714,7 +709,7 @@ gameApp.createModalBonus = function() {
     var title = (isLocked) ? gameApp.text.gamification_bonus_locked :  gameApp.text.gamification_bonus_unlocked;
     var subtitle = (isLocked) ? gameApp.text.gamification_bonus_locked_subtitle :  gameApp.text.gamification_bonus_unlocked_subtitle;
     
-    var extraClassBody = 'gam--locked';
+    var extraClassBody = (isLocked) ? 'gam--locked' : '';
     
     var suffix = window.idtema;
     var id = 'gam-modal-bonus-'+suffix;
@@ -726,13 +721,13 @@ gameApp.createModalBonus = function() {
     var body = lock+message;
 
     var bonusId = gameApp.getFirstBonusActivity().id;
-    var insideBonus = bonusId === window.idclase.toString(); //REVIEW
+    var insideBonus = bonusId === window.idclase.toString();
 
     var buttonStartActivityInside = gameApp.components.Button(false, gameApp.text.gamification_ok, "gameApp.closeModal('"+id+"')", false, extraClassBody);
-    var buttonStartACtivityOutside = gameApp.components.Button(false, gameApp.text.gamification_start_activity, "gameApp.goToActivity('"+bonusId+"')", false);
+    var buttonStartACtivityOutside = gameApp.components.Button(false, gameApp.text.gamification_start_activity, "gameApp.closeModal('"+id+"'); gameApp.goToActivity('"+bonusId+"')", false);
     var buttonStartActivity = (insideBonus) ?  buttonStartActivityInside : buttonStartACtivityOutside;
 
-    var buttonContinue = (!insideBonus) ? gameApp.components.Button(false, gameApp.text.gamification_continue, 'gameApp.closeActivity()', false) : '';
+    var buttonContinue = (!insideBonus || (insideBonus && isLocked)) ? gameApp.components.Button(false, gameApp.text.gamification_continue, "gameApp.closeModal('"+id+"'); gameApp.closeActivity()", false) : '';
     
     var footer = (isLocked) ? buttonContinue : buttonStartActivity+buttonContinue;
 
@@ -823,7 +818,7 @@ gameApp.loadScoreboard = function() {
 }
 
 gameApp.initBonusActivity = function() {
-    if (gameApp.config.isStudent || gameApp.config.isDEV) {
+    if (gameApp.config.isStudent) {
         gameApp.createModalBonus();
     }
 }
@@ -849,8 +844,11 @@ gameApp.initActivity = function(id) {
 
     blink.events.on('slide:update:correct', function() {
         console.log("Slide:update:correct");
-        var percent = gameApp.getGrade();
-        gameApp.createModalScore(tokens, percent);
+
+        if (gameApp.config.isStudent) {
+            var percent = gameApp.getGrade();
+            gameApp.createModalScore(tokens, percent);    
+        }
 
     });
 

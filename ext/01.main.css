@@ -20,7 +20,7 @@ body.gam--locked::after {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9990;
+  z-index: 8990;
   pointer-events: all;
 }
 
@@ -481,6 +481,7 @@ body.gam--locked::after {
   height: 25px;
   background: url(images/prize.png) 0 center no-repeat;
   background-size: contain;
+  margin: 2px 0 -2px 8px;
 }
 .gam-modal.gam-modal-lock.--locked .gam-button {
   border: 1px solid #fff;

@@ -337,7 +337,7 @@
 
     .gam-button {
       min-width: 134px;
-      
+
       &:first-child {
         margin-right: auto;
       }
@@ -473,6 +473,7 @@
           height: 25px;
           background: url(images/prize.png) 0 center no-repeat;
           background-size: contain;
+          margin: 2px 0 -2px 8px;
         }
       }
     }
