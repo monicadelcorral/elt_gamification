@@ -21,7 +21,6 @@ function loadJSON(callback) {
 // ██▀░░░▄███▄░░░██░░██▀░░████▀░██▀███░███████░██░░
 // ████░██▀░▀██░░██░░████░██░██░██░░██░██░░░██░████
 
-
 var gameApp = window.gameApp || {};
 
 gameApp.config = {};
@@ -34,7 +33,8 @@ gameApp.config.bodyClasses = ['gam-body-scoreboard'];
 
 gameApp.config.tags = {
     gamification_unit: "gamification_unit",
-    gamification_bonus : "gamification_bonus"
+    gamification_bonus : "gamification_bonus",
+    gamification_medals_limit_diamonds : "gamification_medals_limit_diamonds_"
 }
 
 gameApp.text = {
@@ -264,6 +264,7 @@ gameApp.components = {};
 
 gameApp.courseData = '';
 
+gameApp.userBadges = [];
 
 gameApp.config.tree = {
     0 : {
@@ -273,6 +274,77 @@ gameApp.config.tree = {
       'page' : 'gam-page--scoreboard'
     }
 }
+
+gameApp.config.rangeMedalsDiamonds = 100;
+gameApp.bonusActivities = [];
+
+//----------------------------------//
+//                                  //
+//  BLINK OVERRIDES                 //
+//                                  //
+//----------------------------------//
+
+gameApp.calculateMedalsDiamonds = function() {
+    var tags = blink.gamification.cursoJson.courseTags;
+    var tag = tags.find(tag => tag.startsWith(gameApp.config.tags.gamification_medals_limit_diamonds));
+    var max = (typeof tag !== 'undefined') ? tag.replace(gameApp.config.tags.gamification_medals_limit_diamonds, '') : 10000;
+    var range = gameApp.config.rangeMedalsDiamonds;
+    let array = Array(max/range).fill().map((_,i) => i*range);
+
+    return array;
+}
+
+gameApp.getAllBonusActivities = function() {
+
+    var data = blink.gamification.cursoJson;
+
+    $.each(data.units, function(i, unit) {
+        var bonusActivities = unit.subunits.filter(function(subunit) {
+            var tags = typeof subunit.tags !== "undefined" ? subunit.tags.split(" ") : [];
+            var tokens = typeof subunit.game_token !== "undefined" ? subunit.game_token : false;
+            return tags.indexOf(gameApp.config.tags.gamification_bonus) >= 0 && tokens;
+        });
+        var bonusActivitiesId = _.pluck(bonusActivities, 'id');
+
+        if (bonusActivitiesId.length > 0) {
+            var newArray = [...new Set([gameApp.bonusActivities,bonusActivitiesId].reduce( (a, e) => a.concat(e), []))].sort()
+            gameApp.bonusActivities = newArray;
+        };
+        
+    });    
+    return gameApp.bonusActivities;
+}
+
+
+blink.gamification.getBadgesModel = function() {
+    var arrayMedalsDiamonds = gameApp.calculateMedalsDiamonds();
+    return [{
+        name: "Percent Lessons completed",
+        levels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+        calc: function() { //TODO
+            var activitiesCompleted = 0;
+            var activitiesTotal = 100;
+            return Math.ceil(activitiesCompleted * 100 / activitiesTotal)
+        }
+    }, {
+        name: "Bonus activities done",
+        levels: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60],
+        calc: function(e) {
+            var activitiesCompleted = typeof window.actividades !== "undefined" ?  _.keys(window.actividades) : [];
+            var bonusTotal = gameApp.getAllBonusActivities();
+            var bonusCompleted = bonusTotal.length - _.intersection(activitiesCompleted.sort(),bonusTotal.sort()).length;
+            return bonusCompleted;
+        }
+    }, {
+        name: "Diamonds earned",
+        levels: arrayMedalsDiamonds,
+        calc: function(e) { //TODO
+            var diamondsEarned = 0;
+            return diamondsEarned;
+        }
+    }]
+}
+
 
 //----------------------------------//
 //                                  //
@@ -590,13 +662,6 @@ gameApp.playAudio = function(audioID) {
 }
 
 
-
-//----------------------------------//
-//                                  //
-//  Components                      //
-//                                  //
-//----------------------------------//
-
 //----------------------------------//
 //                                  //
 //  Components                      //
@@ -827,8 +892,6 @@ gameApp.initActivity = function(id) {
     console.log("Gamification ACtivity loaded");
 
     var tokens = gameApp.tokenActivity(window.idcurso);
-    var badge = gameApp.components.TokensBadge(tokens);
-    var header = $('#actividad .item-container .header');
 
     var isBonus = gameApp.detectBonusActivity();
 
@@ -838,7 +901,10 @@ gameApp.initActivity = function(id) {
 
     blink.events.on('section:shown', function() {
         if (tokens > 0) {
+            var header = $('#actividad .item-container .header');
+            var badge = gameApp.components.TokensBadge(tokens);
             header.append(badge);
+            console.log("a");
         }
     });
 
@@ -852,9 +918,25 @@ gameApp.initActivity = function(id) {
 
     });
 
+    blink.events.on('gamification:badges:calculated', function() {
+        console.log("gamification:badges:calculated");
+
+        if (gameApp.config.isStudent) {
+            var percent = gameApp.getGrade();
+            gameApp.createModalScore(tokens, percent);    
+        }
+
+    });
+
 }
 
 gameApp.initApp = function() {
+    gameApp.courseData = blink.gamification.cursoJson;
+    gameApp.userBadges = blink.gamification.cursoJson.badges;
+
+
+    gameApp.config.isStudent = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin();
+    gameApp.config.isAnonymous = !blink.user.esAdmin() && !blink.user.esEditor() && !blink.user.esEditorial() && !blink.user.esProfesor() && !blink.user.esSAdmin() && !blink.user.esAlumno() && !blink.user.esPadre();
 
     var ishtmlBook = $('body').hasClass('body_htmlBook');
     var isActivity = $('body').hasClass('body_clase');
@@ -879,11 +961,15 @@ jQuery(function() {
     var dataLoaded = gameApp.courseData !== '';
     console.log(dataLoaded);
     
-    if (dataLoaded) {
+    blink.events.on('gamification:init', function() {
+        gameApp.initApp();
+    });
+
+    /*if (dataLoaded) {
         gameApp.initApp();
     } else {
         gameApp.getCourseData(true);
-    }
+    }*/
 
     console.log("Testing2");
 
