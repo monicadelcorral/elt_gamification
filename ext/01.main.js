@@ -687,7 +687,8 @@ gameApp.createModalBonus = function() {
 
 
 gameApp.initShortcutScoreboard = function() {
-    console.log("AAA");
+
+    if ($('#gam-tooltip-scoreboard').length) return;
     //var button = gameApp.components.ButtonScoreboard();
     var tooltip = gameApp.components.TooltipScoreboard();
 
