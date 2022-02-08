@@ -47,7 +47,7 @@
 
 @mixin button() {
   @include button-base();
-  padding: 12px 20px;
+  padding: 8px 20px 12px 20px;
   background-color: $color_3;
   color: $color_white;
   font-size: 14px;

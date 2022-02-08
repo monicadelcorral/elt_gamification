@@ -81,6 +81,10 @@ body.gam--locked::after {
   margin: 0;
 }
 
+#actividad .carousel-inner .item-container .revision-budget {
+  display: none !important;
+}
+
 .gam-button {
   max-width: 100%;
   border-radius: 100px;
@@ -100,7 +104,7 @@ body.gam--locked::after {
   -webkit-appearance: none;
   cursor: pointer;
   text-decoration: none;
-  padding: 12px 20px;
+  padding: 8px 20px 12px 20px;
   background-color: #395482;
   color: #fff;
   font-size: 14px;

@@ -77,188 +77,58 @@ gameApp.sounds = {
 	3: '../themes/responsive/assets/styles/'+gameApp.themeName+'/ext/sounds/mixkit-mechanical-crate-pick-up-3154.mp3',
 }
 
-gameApp.config.tokens = [
-    {
-        total: 5,
-        intervals: [
-            {
-                minPercent: 0,
-                maxPercent: 24,
-                given: 1,
-                title: gameApp.text.gamification_score_fail,
-                subtitle: gameApp.text.gamification_score_fail_subtitle,
-                sound: gameApp.sounds[0]
-            },
-            {
-                minPercent: 25,
-                maxPercent: 49,
-                given: 2,
-                title: gameApp.text.gamification_score_not_bad,
-                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 50,
-                maxPercent: 69,
-                given: 3,
-                title: gameApp.text.gamification_score_well_done,
-                subtitle: gameApp.text.gamification_score_well_done_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 70,
-                maxPercent: 99,
-                given: 4,
-                title: gameApp.text.gamification_score_greate,
-                subtitle: gameApp.text.gamification_score_great_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 100,
-                maxPercent: 100,
-                given: 5,
-                title: gameApp.text.gamification_score_brilliant,
-                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
-                sound: gameApp.sounds[1]
-            }
-        ]
-    },
-    {
-        total: 10,
-        intervals: [
-            {
-                minPercent: 0,
-                maxPercent: 24,
-                given: 2,
-                title: gameApp.text.gamification_score_fail,
-                subtitle: gameApp.text.gamification_score_fail_subtitle,
-                sound: gameApp.sounds[0]
-            },
-            {
-                minPercent: 25,
-                maxPercent: 49,
-                given: 4,
-                title: gameApp.text.gamification_score_not_bad,
-                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 50,
-                maxPercent: 69,
-                given: 6,
-                title: gameApp.text.gamification_score_well_done,
-                subtitle: gameApp.text.gamification_score_well_done_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 70,
-                maxPercent: 99,
-                given: 8,
-                title: gameApp.text.gamification_score_greate,
-                subtitle: gameApp.text.gamification_score_great_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 100,
-                maxPercent: 100,
-                given: 10,
-                title: gameApp.text.gamification_score_brilliant,
-                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
-                sound: gameApp.sounds[1]
-            }
-        ]
-    },
-    {
-        total: 15,
-        intervals: [
-            {
-                minPercent: 0,
-                maxPercent: 24,
-                given: 3,
-                title: gameApp.text.gamification_score_fail,
-                subtitle: gameApp.text.gamification_score_fail_subtitle,
-                sound: gameApp.sounds[0]
-            },
-            {
-                minPercent: 25,
-                maxPercent: 49,
-                given: 6,
-                title: gameApp.text.gamification_score_not_bad,
-                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 50,
-                maxPercent: 69,
-                given: 9,
-                title: gameApp.text.gamification_score_well_done,
-                subtitle: gameApp.text.gamification_score_well_done_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 70,
-                maxPercent: 99,
-                given: 12,
-                title: gameApp.text.gamification_score_great,
-                subtitle: gameApp.text.gamification_score_great_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 100,
-                maxPercent: 100,
-                given: 15,
-                title: gameApp.text.gamification_score_brilliant,
-                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
-                sound: gameApp.sounds[1]
-            }
-        ]
-    },
-    {
-        total: 25,
-        intervals: [
-            {
-                minPercent: 0,
-                maxPercent: 24,
-                given: 5,
-                title: gameApp.text.gamification_score_fail,
-                subtitle: gameApp.text.gamification_score_fail_subtitle,
-                sound: gameApp.sounds[0]
-            },
-            {
-                minPercent: 25,
-                maxPercent: 49,
-                given: 10,
-                title: gameApp.text.gamification_score_not_bad,
-                subtitle: gameApp.text.gamification_score_not_bad_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 50,
-                maxPercent: 69,
-                given: 15,
-                title: gameApp.text.gamification_score_well_done,
-                subtitle: gameApp.text.gamification_score_well_done_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 70,
-                maxPercent: 99,
-                given: 20,
-                title: gameApp.text.gamification_score_greate,
-                subtitle: gameApp.text.gamification_score_great_subtitle,
-                sound: gameApp.sounds[1]
-            },
-            {
-                minPercent: 100,
-                maxPercent: 100,
-                given: 25,
-                title: gameApp.text.gamification_score_brilliant,
-                subtitle: gameApp.text.gamification_score_brilliant_subtitle,
-                sound: gameApp.sounds[1]
-            }
-        ]
-    }
-]
+gameApp.config.tokens = {
+    intervals: [
+        {
+            minPercent: -1,
+            maxPercent: 0,
+            given: 0,
+            title: gameApp.text.gamification_score_fail,
+            subtitle: gameApp.text.gamification_score_fail_subtitle,
+            sound: gameApp.sounds[0]
+        },
+        {
+            minPercent: 1,
+            maxPercent: 24,
+            given: 20,
+            title: gameApp.text.gamification_score_fail,
+            subtitle: gameApp.text.gamification_score_fail_subtitle,
+            sound: gameApp.sounds[0]
+        },
+        {
+            minPercent: 25,
+            maxPercent: 49,
+            given: 40,
+            title: gameApp.text.gamification_score_not_bad,
+            subtitle: gameApp.text.gamification_score_not_bad_subtitle,
+            sound: gameApp.sounds[1]
+        },
+        {
+            minPercent: 50,
+            maxPercent: 69,
+            given: 60,
+            title: gameApp.text.gamification_score_well_done,
+            subtitle: gameApp.text.gamification_score_well_done_subtitle,
+            sound: gameApp.sounds[1]
+        },
+        {
+            minPercent: 70,
+            maxPercent: 99,
+            given: 80,
+            title: gameApp.text.gamification_score_greate,
+            subtitle: gameApp.text.gamification_score_great_subtitle,
+            sound: gameApp.sounds[1]
+        },
+        {
+            minPercent: 100,
+            maxPercent: 100,
+            given: 100,
+            title: gameApp.text.gamification_score_brilliant,
+            subtitle: gameApp.text.gamification_score_brilliant_subtitle,
+            sound: gameApp.sounds[1]
+        }
+    ]
+}
 
 gameApp.components = {};
 
@@ -535,7 +405,11 @@ gameApp.detectBonusIsLocked = function() {
     
     var unitActivitiesId = gameApp.getRegularActivitiesFromUnit();
 
-    var activitiesDoneId = typeof window.actividades !== "undefined" ?  _.keys(window.actividades) : [];
+    var activitiesDone = typeof window.actividades !== "undefined" ? window.actividades : [];
+    activitiesDone = activitiesDone.filter(function(activity) {
+        return activity.nota !== '';
+    })
+    var activitiesDoneId = _.keys(activitiesDone);
 
     var isUnlocked = _.intersection(activitiesDoneId.sort(),unitActivitiesId.sort()).length === unitActivitiesId.length;
     
@@ -723,19 +597,15 @@ gameApp.components.Modal = function(id, header, body, footer, extraClasses) {
 //----------------------------------//
 
 
-gameApp.createModalScore = function(tokens, percent) {
+gameApp.createModalScore = function(tokens, grade) {
 
-    var tokenInfo = gameApp.config.tokens.filter(function(range) {
-        return range.total === tokens;
-    });
-
-    var result = tokenInfo[0].intervals.filter(function(interval) {
-        return interval.minPercent <= percent && interval.maxPercent >= percent;
+    var result = gameApp.config.tokens.intervals.filter(function(interval) {
+        return interval.minPercent <= grade && interval.maxPercent >= grade;
     });
 
     var title = result[0].title;
     var subtitle = result[0].subtitle;
-    var given = result[0].given;
+    var given = tokens * result[0].given / 100;
     var soundFile = result[0].sound;
 
     var suffix = window.idtema;
@@ -751,12 +621,12 @@ gameApp.createModalScore = function(tokens, percent) {
     var bonusId = gameApp.getFirstBonusActivity().id;
 
     var buttonRepeat = gameApp.components.Button(false, gameApp.text.gamification_try_again, "gameApp.closeModal('"+id+"')", false);
-    var buttonContinueNotBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, 'cerrarIframe()', false);
+    var buttonContinueNotBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, 'gameApp.closeActivity()', false);
     var buttonContinueBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, "gameApp.closeModal('"+id+"'); gameApp.createModalBonus()", false);
 
     var buttonContinue = (detectIfBonusIsOpen) ? buttonContinueBonus : buttonContinueNotBonus ;
     
-    var footer = (percent !== 100) ? buttonRepeat+buttonContinue : buttonContinue;
+    var footer = (grade !== 100) ? buttonRepeat+buttonContinue : buttonContinue;
 
     var extraClasses = 'gam-modal-prize';
 
@@ -899,12 +769,21 @@ gameApp.initActivity = function(id) {
         gameApp.initBonusActivity();
     }
 
-    blink.events.on('section:shown', function() {
+    if (tokens > 0) {
+        var currentSection = blink.activity.currentSection;
+        var header = $('#slider-item-'+currentSection+' .header');
+        var badge = gameApp.components.TokensBadge(tokens);
+        header.find('.gam-score-badge').remove();
+        header.append(badge);
+    }
+
+    blink.events.on('slide:update:after section:shown', function() {
         if (tokens > 0) {
-            var header = $('#actividad .item-container .header');
+            var currentSection = blink.activity.currentSection;
+            var header = $('#slider-item-'+currentSection+' .header');
             var badge = gameApp.components.TokensBadge(tokens);
+            header.find('.gam-score-badge').remove();
             header.append(badge);
-            console.log("a");
         }
     });
 
@@ -912,8 +791,8 @@ gameApp.initActivity = function(id) {
         console.log("Slide:update:correct");
 
         if (gameApp.config.isStudent) {
-            var percent = gameApp.getGrade();
-            gameApp.createModalScore(tokens, percent);    
+            var grade = gameApp.getGrade();
+            gameApp.createModalScore(tokens, grade);    
         }
 
     });
@@ -922,8 +801,8 @@ gameApp.initActivity = function(id) {
         console.log("gamification:badges:calculated");
 
         if (gameApp.config.isStudent) {
-            var percent = gameApp.getGrade();
-            gameApp.createModalScore(tokens, percent);    
+            //var grade = gameApp.getGrade();
+            //gameApp.createModalScore(tokens, grade);    
         }
 
     });
@@ -941,9 +820,7 @@ gameApp.initApp = function() {
     var ishtmlBook = $('body').hasClass('body_htmlBook');
     var isActivity = $('body').hasClass('body_clase');
     var isGamificationActivity = gameApp.detectGamificationActivity(window.idtema);
-    
-    console.log(isGamificationActivity, window.idtema);
-    
+        
     if (isActivity && isGamificationActivity) {
         gameApp.initActivity(window.idtema);   
     } else if (ishtmlBook) {
@@ -959,7 +836,6 @@ gameApp.initApp = function() {
 jQuery(function() { 
 
     var dataLoaded = gameApp.courseData !== '';
-    console.log(dataLoaded);
     
     blink.events.on('gamification:init', function() {
         gameApp.initApp();
