@@ -65,6 +65,8 @@ gameApp.text = {
     gamification_bonus_unlocked : "<span>Bonus activity</span> unlocked!",
     gamification_bonus_locked_subtitle : "Oops! Complete all the activities on this page to unlock the Bonus activity.",
     gamification_bonus_unlocked_subtitle : "Win 25 bonus diamonds!",
+    gamification_medals : "Medals",
+    gamification_units : "Units",
 
 }
 
@@ -684,14 +686,15 @@ gameApp.createModalBonus = function() {
 //----------------------------------//
 
 
-gameApp.initBook = function() {
-
-    var button = gameApp.components.ButtonScoreboard();
+gameApp.initShortcutScoreboard = function() {
+    console.log("AAA");
+    //var button = gameApp.components.ButtonScoreboard();
     var tooltip = gameApp.components.TooltipScoreboard();
 
     var navbar = $('.navbar');
 
-    navbar.prepend(button).append(tooltip);
+    //navbar.prepend(button).append(tooltip);
+    navbar.append(tooltip);
 
 }
 
@@ -734,9 +737,14 @@ gameApp.loadScoreboard = function() {
 
     var learningKit = '<div class="gam-learning-kit"><h2 class="gam-title--3">'+gameApp.text.gamification_active_learning_kit+'</h2><div class="gam-learning-kit__results">'+learningKitUnits+learningKitActivities+'</div></div>';
 
-    var topheader = '<div class="gam-page__header__top"><h1 class="gam-title">'+gameApp.text.gamification_scoreboard_title+'</h1><button class="gam-button" onclick="gameApp.closePage(0);">'+gameApp.text.gamification_close+'</button></div>';
+    var topheader = '<div class="gam-page__header__top --placeholder"></div><div class="gam-page__header__top"><h1 class="gam-title">'+gameApp.text.gamification_scoreboard_title+'</h1><button class="gam-button" onclick="gameApp.closePage(0);">'+gameApp.text.gamification_close+'</button></div>';
     var bottomheader = '<div class="gam-page__header__bottom">'+score+learningKit+'</div>';
     var header = '<header class="gam-page__header"><div class="gam-page__header__inner">'+topheader+bottomheader+'</div></header>';
+
+    var bodyMedals = '';
+    var bodyUnits = '';
+    var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active" id="gam-medals">'+bodyMedals+'</div><div class="gam-tabs__content__item" id="gam-units">'+bodyUnits+'</div></div></div>';
+
 
     $('.gam-page--scoreboard').append(header);
 
@@ -823,10 +831,8 @@ gameApp.initApp = function() {
         
     if (isActivity && isGamificationActivity) {
         gameApp.initActivity(window.idtema);   
-    } else if (ishtmlBook) {
-        gameApp.initBook();
     }
-
+    gameApp.initShortcutScoreboard();
     gameApp.initScoreboard();
 
 }

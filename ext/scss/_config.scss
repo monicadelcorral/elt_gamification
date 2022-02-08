@@ -21,7 +21,8 @@ $color_2: #e67300;
 $color_3: #395482;
 $color_4: #efefef;
 $color_5: #2e4469;
-
+$color_6: #18be34;
+$color_7: #008a26;
 
 $font_family_1 : 'DejaVu Sans', sans-serif;
 
@@ -86,7 +87,7 @@ $font_family_1 : 'DejaVu Sans', sans-serif;
   overflow-x: $x;
   overflow-y: $y;
   -webkit-overflow-scrolling: touch;
-  scrollbar-color: $color_1 $color-white;
+  scrollbar-color: $color_5 $color-white;
   scrollbar-width: thin;
 
   &::-webkit-scrollbar {
@@ -98,7 +99,16 @@ $font_family_1 : 'DejaVu Sans', sans-serif;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $color_1;
+    background-color: $color_5;
     border-radius: 20px;
   }
+}
+
+
+//Layout
+
+@mixin layout() {
+  max-width: 100%;
+  width: 904px;
+  margin: 0 auto;
 }
