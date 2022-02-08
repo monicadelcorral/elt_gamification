@@ -559,47 +559,62 @@
 
 
 .gam-tabs {
+  @include layout();
   padding: 62px 30px 30px;
   border-radius: 10px;
   border: solid 1px #c8c8c8;
   background-color: $color_4;
 
   &__list {
-    border: 4px solid $color_6;
-    background: $color_white;
-    border-radius: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
+    text-align: center;
+    margin-top: -86px;
+    margin-bottom: 60px;
 
-    a {
-      display: flex;
-      flex-direction: column;
+    ul {
+      border: 4px solid $color_6;
+      background: $color_white;
+      border-radius: 40px;
+      display: inline-flex;
       justify-content: center;
-      align-items: center;
-      color: $color_white;
-      background: $color_7;
-      font-size: 21px;
-      font-weight: bold;
-      line-height: 1.52;
-      text-align: center;
-      min-height: 40px;
-      min-width: 150px;
-    }
+      align-items: stretch;
 
-    li.--current {
-      a {
-        color: $color_7;
-        background-color: $color_white;
+      li {
+        flex-grow: 2;
       }
-    }
 
-    li:first-child {
-      border-radius: 40px 0 0 40px;
-    }
+      a {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: $color_white;
+        background: $color_7;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1.52;
+        text-align: center;
+        min-height: 40px;
+        min-width: 150px;
+      }
 
-    li:last-child {
-      border-radius: 0 40px 40px 0;
+      li.--current {
+        a {
+          color: $color_7;
+          background-color: $color_white;
+        }
+      }
+
+      li:first-child {
+        &, a {
+          border-radius: 40px 0 0 40px;
+        }
+      }
+
+      li:last-child {
+        &, a {
+          border-radius: 0 40px 40px 0;
+        }
+      }
     }
   }
 
@@ -612,4 +627,77 @@
       }
     }
   }
+}
+
+
+// Medals 
+
+
+.gam-medals {
+  text-align: center;
+  margin: 0 0 60px 0;
+  color: $color_8;
+
+  &__body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  
+    & > * {
+      width: 33.3333%;
+    }
+  }
+
+  &__header {
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1.2em;
+    margin: 0 auto 8px;
+  }
+}
+
+.gam-medal {
+  color: $color_8;
+
+  &.--empty {
+    flex-grow: 2;
+  }
+
+  &__label {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.2em;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  &__icon {
+    width: 108px;
+    height: 120px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-size: contain;
+    margin: 0 auto;
+
+    .--empty & {
+      filter: grayscale(100);
+      opacity: .5;
+    } 
+
+    .--0 & {
+      background-image: url(images/medal_activity.svg);
+    }
+  
+    .--1 & {
+      background-image: url(images/medal_bonus.svg);
+    }
+  
+    .--2 & {
+      background-image: url(images/medal_diamonds.svg);
+    }
+  }
+
+
+
 }

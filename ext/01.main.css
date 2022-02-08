@@ -102,7 +102,7 @@ body.gam--locked::after {
 .gam-page__header {
   background: #18be34;
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 100px;
 }
 .gam-page__header .gam-title {
   font-size: 30px;
@@ -119,14 +119,16 @@ body.gam--locked::after {
 .gam-page__header__top {
   padding: 40px 0 40px;
   text-align: center;
-  margin-bottom: -40px;
+  margin-bottom: 0;
   height: 116px;
 }
 .gam-page__header__top:not(.--placeholder) {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 6px;
+  background: #18be34;
+  z-index: 10;
 }
 .gam-page__header__bottom {
   max-width: 100%;
@@ -137,6 +139,7 @@ body.gam--locked::after {
   border: 4px solid #18be34;
   background: #fff;
   padding: 20px;
+  margin-top: -40px;
   color: #2e4469;
   border-radius: 100px;
   display: flex;
@@ -611,20 +614,31 @@ body.gam--locked::after {
 }
 
 .gam-tabs {
+  max-width: 100%;
+  width: 904px;
+  margin: 0 auto;
   padding: 62px 30px 30px;
   border-radius: 10px;
   border: solid 1px #c8c8c8;
   background-color: #efefef;
 }
 .gam-tabs__list {
+  text-align: center;
+  margin-top: -86px;
+  margin-bottom: 60px;
+}
+.gam-tabs__list ul {
   border: 4px solid #18be34;
   background: #fff;
   border-radius: 40px;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: stretch;
 }
-.gam-tabs__list a {
+.gam-tabs__list ul li {
+  flex-grow: 2;
+}
+.gam-tabs__list ul a {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -638,14 +652,14 @@ body.gam--locked::after {
   min-height: 40px;
   min-width: 150px;
 }
-.gam-tabs__list li.--current a {
+.gam-tabs__list ul li.--current a {
   color: #008a26;
   background-color: #fff;
 }
-.gam-tabs__list li:first-child {
+.gam-tabs__list ul li:first-child, .gam-tabs__list ul li:first-child a {
   border-radius: 40px 0 0 40px;
 }
-.gam-tabs__list li:last-child {
+.gam-tabs__list ul li:last-child, .gam-tabs__list ul li:last-child a {
   border-radius: 0 40px 40px 0;
 }
 .gam-tabs__content__item {
@@ -653,6 +667,62 @@ body.gam--locked::after {
 }
 .gam-tabs__content__item.--active {
   display: block;
+}
+
+.gam-medals {
+  text-align: center;
+  margin: 0 0 60px 0;
+  color: #3c3c3c;
+}
+.gam-medals__body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.gam-medals__body > * {
+  width: 33.3333%;
+}
+.gam-medals__header {
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1.2em;
+  margin: 0 auto 8px;
+}
+
+.gam-medal {
+  color: #3c3c3c;
+}
+.gam-medal.--empty {
+  flex-grow: 2;
+}
+.gam-medal__label {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.2em;
+  text-align: center;
+  margin-top: 8px;
+}
+.gam-medal__icon {
+  width: 108px;
+  height: 120px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: contain;
+  margin: 0 auto;
+}
+.--empty .gam-medal__icon {
+  filter: grayscale(100);
+  opacity: 0.5;
+}
+.--0 .gam-medal__icon {
+  background-image: url(images/medal_activity.svg);
+}
+.--1 .gam-medal__icon {
+  background-image: url(images/medal_bonus.svg);
+}
+.--2 .gam-medal__icon {
+  background-image: url(images/medal_diamonds.svg);
 }
 
 /*# sourceMappingURL=01.main.css.map */

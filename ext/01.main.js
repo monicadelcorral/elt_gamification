@@ -67,6 +67,7 @@ gameApp.text = {
     gamification_bonus_unlocked_subtitle : "Win 25 bonus diamonds!",
     gamification_medals : "Medals",
     gamification_units : "Units",
+    gamification_no_medals : "No medals"
 
 }
 
@@ -161,7 +162,7 @@ gameApp.calculateMedalsDiamonds = function() {
     var tag = tags.find(tag => tag.startsWith(gameApp.config.tags.gamification_medals_limit_diamonds));
     var max = (typeof tag !== 'undefined') ? tag.replace(gameApp.config.tags.gamification_medals_limit_diamonds, '') : 10000;
     var range = gameApp.config.rangeMedalsDiamonds;
-    let array = Array(max/range).fill().map((_,i) => i*range);
+    let array = Array(max/range).fill().map((_,i) => i*range + range);
 
     return array;
 }
@@ -191,7 +192,7 @@ gameApp.getAllBonusActivities = function() {
 blink.gamification.getBadgesModel = function() {
     var arrayMedalsDiamonds = gameApp.calculateMedalsDiamonds();
     return [{
-        name: "Percent Lessons completed",
+        name: "Activities",
         levels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
         calc: function() { //TODO
             var activitiesCompleted = 0;
@@ -199,8 +200,8 @@ blink.gamification.getBadgesModel = function() {
             return Math.ceil(activitiesCompleted * 100 / activitiesTotal)
         }
     }, {
-        name: "Bonus activities done",
-        levels: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60],
+        name: "Bonus activities",
+        levels: [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60],
         calc: function(e) {
             var activitiesCompleted = typeof window.actividades !== "undefined" ?  _.keys(window.actividades) : [];
             var bonusTotal = gameApp.getAllBonusActivities();
@@ -208,7 +209,7 @@ blink.gamification.getBadgesModel = function() {
             return bonusCompleted;
         }
     }, {
-        name: "Diamonds earned",
+        name: "Diamonds",
         levels: arrayMedalsDiamonds,
         calc: function(e) { //TODO
             var diamondsEarned = 0;
@@ -437,6 +438,40 @@ gameApp.getFirstBonusActivity = function(id) {
 
 }
 
+gameApp.getMedalsFromUser = function() {
+    var data = blink.gamification.cursoJson;
+    var totals = blink.gamification.getBadgesModel();
+
+    var body = '';
+
+    $.each(data.badges, function(i, badge) {
+        var innerbody = '';
+        var title = badge.name;
+        var level = badge.level;
+        console.log(totals, totals[i]);
+
+        var levelsEarned = totals[i].levels;
+        levelsEarned.length = level;
+        console.log(levelsEarned);
+
+        $.each(levelsEarned, function(x, level) {
+            var prefix = i === 0 ? '%' : '';
+            var medal = gameApp.components.Medal(i, level, prefix);
+            innerbody += medal;
+        });
+
+        if (levelsEarned.length <= 0) {
+            var medal = gameApp.components.Medal(i, level, '', true);
+            innerbody += medal;
+        }
+
+        body += '<section class="gam-medals"><header class="gam-medals__header">'+title+'</header><div class="gam-medals__body">'+innerbody+'</div></section>';
+
+    });
+
+    return body;
+}
+
 
 gameApp.getSeguimientoCurso = function() { //TODO: REVIEW
     var urlSeguimiento = '/include/javascript/seguimientoCurso.js.php?idcurso=' + idcurso;
@@ -592,6 +627,14 @@ gameApp.components.Modal = function(id, header, body, footer, extraClasses) {
     return component;
 }
 
+gameApp.components.Medal = function(type, achievement, suffix, empty) {
+    var emptyClass = (empty) ? '--empty' : '';
+    var label = (empty) ? gameApp.text.gamification_no_medals : achievement+suffix;
+    var component = '<div class="gam-medal --'+type+' '+emptyClass+'"><div class="gam-medal__icon"></div><div class="gam-medal__label">'+label+'</div></div>';
+    return component;
+
+}
+
 //----------------------------------//
 //                                  //
 //  Gamification Modals             //
@@ -742,15 +785,16 @@ gameApp.loadScoreboard = function() {
     var bottomheader = '<div class="gam-page__header__bottom">'+score+learningKit+'</div>';
     var header = '<header class="gam-page__header"><div class="gam-page__header__inner">'+topheader+bottomheader+'</div></header>';
 
-    var bodyMedals = '';
-    var bodyUnits = '';
-    var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active" id="gam-medals">'+bodyMedals+'</div><div class="gam-tabs__content__item" id="gam-units">'+bodyUnits+'</div></div></div>';
-
 
     $('.gam-page--scoreboard').append(header);
 
+    var bodyMedals = gameApp.getMedalsFromUser();
+    var bodyUnits = '';
+    var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active" id="gam-medals">'+bodyMedals+'</div><div class="gam-tabs__content__item" id="gam-units">'+bodyUnits+'</div></div></div>';
+    $('.gam-page--scoreboard').append(body);
 
-   
+    console.log(body);
+
     var bodyClass = gameApp.config.bodyClasses[0];
     $('body').addClass(bodyClass);
     gameApp.removeUnusedClass(bodyClass);

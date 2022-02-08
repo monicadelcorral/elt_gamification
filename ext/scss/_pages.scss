@@ -2,7 +2,7 @@
     &__header {
         background: $color_6;
         color: $color_white;
-        margin-bottom: 20px;
+        margin-bottom: 100px;
         
         .gam-title {
             font-size: 30px;
@@ -20,14 +20,16 @@
         &__top {
             padding: 40px 0 40px;
             text-align: center;
-            margin-bottom: -40px;
+            margin-bottom: 0;
             height: 116px;
 
             &:not(.--placeholder) {
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 100%;
+                right: 6px;
+                background: $color_6;
+                z-index: 10;
             }
         }
         &__bottom {
@@ -37,6 +39,7 @@
             border: 4px solid $color_6;
             background: $color_white;
             padding: 20px;
+            margin-top: -40px;
             color: $color_5;
             border-radius: 100px;
             display: flex;
