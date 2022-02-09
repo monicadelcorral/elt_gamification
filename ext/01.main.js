@@ -430,7 +430,6 @@ gameApp.getRegularActivitiesFromUnit = function(id) {
         var tokens = typeof subunit.game_token !== "undefined" ? subunit.game_token : false;
         return tags.indexOf(gameApp.config.tags.gamification_bonus) < 0 && tokens;
     });
-
     var unitActivitiesId = _.pluck(regularActivities, 'id');
     return unitActivitiesId;
 
@@ -487,6 +486,24 @@ gameApp.getRegularActivitiesDone = function() {
 }
 
 
+gameApp.getRegularActivitiesDoneFromUnit = function(id, activitiesTotal) {
+    
+    var regularActivitiesId = (typeof activitiesTotal !== 'undefined') ? activitiesTotal : gameApp.getRegularActivitiesFromUnit(id);
+
+    var activitiesDoneId = [];
+    var activitiesDone = typeof window.actividades !== "undefined" ? window.actividades : [];
+    activitiesDone = activitiesDone.filter(function(activity, key) {
+        if (activity.nota !== '') {
+            activitiesDoneId.push(key.toString());
+        }
+        return activity.nota !== '';
+    });
+    var regularActivitiesDone = _.intersection(activitiesDoneId.sort(),regularActivitiesId.sort());
+
+    return regularActivitiesDone;
+
+}
+
 gameApp.getAllBonusActivities = function() {
     
     var bonusActivities = [];
@@ -506,7 +523,7 @@ gameApp.getAllBonusActivities = function() {
 gameApp.getBonusActivitiesDone = function() {
 
     
-    var bonusActivities = gameApp.getAllBonusActivities();;
+    var bonusActivities = gameApp.getAllBonusActivities();
 
     var activitiesDone = typeof window.actividades !== "undefined" ? window.actividades : [];
     activitiesDone = activitiesDone.filter(function(activity) {
@@ -594,13 +611,15 @@ gameApp.getProgressFromUser = function() {
 
     $.each(data, function(i, unit) {
         var prize = gameApp.getScoreFromUnit(unit);
-        var activitiesTotal = gameApp.getRegularActivitiesFromUnit(unit.id).length;
-        var activitiesDone = gameApp.getRegularActivitiesDone(unit.id).length;
-        var notStarted = false;
-
-        body += gameApp.components.Unitcard(unit, prize, activitiesDone, activitiesTotal, notStarted)
+        var activitiesTotalData = gameApp.getRegularActivitiesFromUnit(unit.id);
+        var activitiesTotal = activitiesTotalData.length;
+        var activitiesDone = gameApp.getRegularActivitiesDoneFromUnit(unit.id, activitiesTotalData).length;
+        var notStarted = false; //TODO
+        body += gameApp.components.Unitcard(unit, prize, activitiesTotal, activitiesDone, notStarted)
     });
     body += '</div>';
+    
+    $('body').removeClass('--loading');
 
     return body;
 }
@@ -930,7 +949,7 @@ gameApp.loadScoreboard = function() {
 
     // Header
     var score = gameApp.components.ScoreBadge();
-    var unitsCompleted = 0; //TODO
+    var unitsCompleted = '-'; //TODO
     var unitsTotal = gameApp.detectGamificationUnits().length;
     var activitiesCompleted = gameApp.getRegularActivitiesDone().length;
     var activitiesTotal = gameApp.getAllRegularActivities().length;
@@ -947,14 +966,14 @@ gameApp.loadScoreboard = function() {
 
     $('.gam-page--scoreboard').append(header);
 
+    var bodyClass = gameApp.config.bodyClasses[0];
+    $('body').addClass(bodyClass).addClass('--loading');
+    gameApp.removeUnusedClass(bodyClass);
+
     var bodyMedals = gameApp.getMedalsFromUser();
     var bodyUnits = gameApp.getProgressFromUser();
     var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals" class="ox-js-tabs">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units" class="ox-js-tabs">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active" id="gam-medals">'+bodyMedals+'</div><div class="gam-tabs__content__item" id="gam-units">'+bodyUnits+'</div></div></div>';
     $('.gam-page--scoreboard').append(body);
-
-    var bodyClass = gameApp.config.bodyClasses[0];
-    $('body').addClass(bodyClass);
-    gameApp.removeUnusedClass(bodyClass);
 
 
     console.log("Scoreboard loaded");
