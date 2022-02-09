@@ -74,6 +74,20 @@ body.gam--locked::after {
   margin: 0 auto 12px;
 }
 
+.gam-title--2 {
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1.4em;
+  margin: 0 0 2px;
+}
+.gam-title--2 span {
+  font-size: 12px;
+  line-height: 1.2em;
+  font-weight: 400;
+  display: block;
+  margin: 0 auto 12px;
+}
+
 .gam-title--3 {
   font-size: 15px;
   font-weight: bold;
@@ -286,30 +300,31 @@ body.gam--locked::after {
   display: block;
 }
 
-.gam-learning-kit__results {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.gam-learning-kit__section {
+.gam-progressboard {
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
   margin: 0 24px 0 0;
+  color: #2e4469;
 }
-.gam-learning-kit__title {
+.gam-progressboard__wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.gam-progressboard__title {
   margin: 0 6px 0 0;
   font-size: 21px;
   font-weight: 400;
   line-height: 1.2em;
 }
-.gam-learning-kit__score {
+.gam-progressboard__score {
   margin: 0 3px 0 6px;
   font-size: 21px;
   font-weight: bold;
   line-height: 1.43;
 }
-.gam-learning-kit__label {
+.gam-progressboard__label {
   margin: 5px 0 0 3px;
   font-size: 13px;
   font-weight: normal;
@@ -678,6 +693,7 @@ body.gam--locked::after {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 .gam-medals__body > * {
   width: 33.3333%;
@@ -723,6 +739,55 @@ body.gam--locked::after {
 }
 .--2 .gam-medal__icon {
   background-image: url(images/medal_diamonds.svg);
+}
+
+.gam-unicard__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0 -8px -16px;
+}
+.gam-unicard__wrapper .gam-unitcard {
+  width: 33.333%;
+}
+
+.gam-unitcard {
+  padding: 0 8px 16px 8px;
+  color: #2e4469;
+}
+.gam-unitcard__inner {
+  padding: 15px 16px 16px;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  background-color: #fff;
+}
+.gam-unitcard__header {
+  margin-bottom: 14px;
+}
+.gam-unitcard__body {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.gam-unitcard .gam-progressboard {
+  flex-direction: column;
+  margin-left: 20px;
+}
+.gam-unitcard .gam-progressboard__title {
+  font-size: 15px;
+  font-weight: bold;
+}
+.gam-unitcard .gam-progressboard__score {
+  margin-left: 0;
+}
+.gam-unitcard .gam-progressboard__label {
+  margin-top: 0;
+  margin-left: 0;
+}
+.gam-unitcard .gam-score {
+  background-size: 48px auto;
+  padding-left: 54px;
 }
 
 /*# sourceMappingURL=01.main.css.map */

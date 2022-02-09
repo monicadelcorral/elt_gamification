@@ -156,22 +156,22 @@
   }
 }
 
-// Scoreboar Learning kit
+// Scoreboard Learning kit
 
-.gam-learning-kit {
-  &__results {
+
+.gam-progressboard {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  margin: 0 24px 0 0;
+  color: $color_5;
+
+  &__wrapper {
     display: flex;
     justify-content: flex-start;
     align-items: center;
   }
 
-  &__section {
-    display: flex;
-    justify-content: flex-start;
-    align-items: baseline;
-    margin: 0 24px 0 0;
-  }
-  
   &__title {
     margin: 0 6px 0 0;
     font-size: 21px;
@@ -642,6 +642,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-wrap: wrap;
   
     & > * {
       width: 33.3333%;
@@ -697,7 +698,62 @@
       background-image: url(images/medal_diamonds.svg);
     }
   }
+}
 
+.gam-unicard__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0 -8px -16px;
 
+  .gam-unitcard {
+    width: 33.333%;
+  }
+}
+
+.gam-unitcard {
+    padding: 0 8px 16px 8px;
+    color: $color_5;
+
+    &__inner {
+      padding: 15px 16px 16px;
+      border-radius: 8px;
+      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+      background-color: $color_white;
+    }
+
+    &__header {
+      margin-bottom: 14px;
+    }
+
+    &__body {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .gam-progressboard {
+      flex-direction: column;
+      margin-left: 20px;
+
+      &__title {
+        font-size: 15px;
+        font-weight: bold;
+      }
+      &__score {
+        margin-left: 0;
+      }
+
+      &__label {
+        margin-top: 0;
+        margin-left: 0;
+      }
+    }
+
+    .gam-score {
+      background-size: 48px auto;
+      padding-left: 54px;
+    }
 
 }

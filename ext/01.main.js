@@ -30,6 +30,7 @@ gameApp.config.isStudent = false;
 gameApp.config.isAnonymous = true;
 gameApp.config.animationsDuration = 250;
 gameApp.config.bodyClasses = ['gam-body-scoreboard'];
+gameApp.config.userScoreIndex = 2;
 
 gameApp.config.tags = {
     gamification_unit: "gamification_unit",
@@ -323,6 +324,13 @@ gameApp.closeActivity = function() {
 
 }
 
+gameApp.tabs = function(button, target) {
+
+    button.parent().addClass('--current').siblings().removeClass('--current');
+    $(target).addClass('--active').siblings().removeClass('--active');
+
+}
+
 gameApp.detectGamificationUnits = function() {
     var data = gameApp.courseData;
 
@@ -366,10 +374,34 @@ gameApp.tokenActivity = function(id) {
     return token;
 }
 
+gameApp.calculateLevelScoreFromActivity = function(grade) {
+    var result = gameApp.config.tokens.intervals.filter(function(interval) {
+        return interval.minPercent <= grade && interval.maxPercent >= grade;
+    });
+
+    return result[0];
+}
+
 gameApp.getGrade = function(id) {
     var id = (typeof id !== 'undefined') ? id : window.idclase;
-    var grade = (typeof window.actividades[id] === 'undefined') ? 0 : window.actividades[id].clasificacion;
+    var grade = (typeof window.actividades[id] === 'undefined') ? '' : window.actividades[id].clasificacion;
     return grade;
+}
+
+gameApp.getScoreFromUnit = function(unit) {
+
+    var score = 0;
+    var activitiesDone = typeof window.actividades !== "undefined" ? window.actividades : [];
+    
+    activitiesDone = activitiesDone.filter(function(activity) {
+        var hasScore = (activity.idtema === unit.id) && activity.game_score && activity.game_score !== '';
+        if (hasScore) {
+            score += activity.game_score;
+        }
+        return hasScore;
+    });
+
+    return score;
 }
 
 gameApp.detectBonusActivity = function() {
@@ -555,15 +587,40 @@ gameApp.getMedalsFromUser = function() {
     return body;
 }
 
-
-gameApp.getSeguimientoCurso = function() { //TODO: REVIEW
-    var urlSeguimiento = '/include/javascript/seguimientoCurso.js.php?idcurso=' + idcurso;
-
-    loadScript(urlSeguimiento, true, (function(data) {
-    console.log(data);
+gameApp.getProgressFromUser = function() {
+    var body = '<div class="gam-unicard__wrapper">';
     
-    }).bind(this));
+    var data = gameApp.detectGamificationUnits();
+
+    $.each(data, function(i, unit) {
+        var prize = gameApp.getScoreFromUnit(unit);
+        var activitiesTotal = gameApp.getRegularActivitiesFromUnit(unit.id).length;
+        var activitiesDone = gameApp.getRegularActivitiesDone(unit.id).length;
+        var notStarted = false;
+
+        body += gameApp.components.Unitcard(unit, prize, activitiesDone, activitiesTotal, notStarted)
+    });
+    body += '</div>';
+
+    return body;
 }
+
+gameApp.getUserScore = function() {
+    var score = 0;
+
+    var activitiesDone = typeof window.actividades !== "undefined" ? window.actividades : [];
+    
+    activitiesDone = activitiesDone.filter(function(activity) {
+        var hasScore = activity.game_score && activity.game_score !== '';
+        if (hasScore) {
+            score += activity.game_score;
+        }
+        return hasScore;
+    });
+
+    return score;
+}
+
 
 gameApp.openModal = function(modal, id, extraClassBody) {
    $('body').append(modal);
@@ -679,10 +736,18 @@ gameApp.components.ButtonScoreboard = function() {
     return component;
 }
 
+gameApp.components.ScoreBadge = function(prize) {
+
+    var score = (typeof prize !== 'undefined') ? prize : gameApp.getUserScore();
+    var component = '<div class="gam-score"><span class="gam-score__label">'+gameApp.text.gamification_score_label+'</span><span class="gam-score__total">'+score+'</span></div>';
+
+    return component;
+
+}
+
 gameApp.components.TooltipScoreboard = function() {
     
-    var totalScore = 2000;
-    var score = '<div class="gam-score"><span class="gam-score__label">'+gameApp.text.gamification_score_label+'</span><span class="gam-score__total">'+totalScore+'</span></div>';
+    var score = gameApp.components.ScoreBadge();
     var buttonScoreboard = gameApp.components.Button(false, gameApp.text.gamification_see_details, false, 'gam-js-goToScoreboard');
     
     var scoreboardSummary = '<div class="gam-scoreboard-summary">'+score+buttonScoreboard+'</div>';
@@ -716,6 +781,22 @@ gameApp.components.Medal = function(type, achievement, suffix, empty) {
 
 }
 
+gameApp.components.ProgressBoard = function(title, completed, total, label) {
+    var component = '<div class="gam-progressboard"><h3 class="gam-progressboard__title">'+title+'</h3><div class="gam-progressboard__score">'+completed+'/'+total+'</div><div class="gam-progressboard__label">'+label+'</div></div>';
+    return component;
+}
+
+gameApp.components.Unitcard = function(unit, prize, activitiesTotal, activitiesDone, notStarted) {
+    var notStartedClass = (notStarted) ? '--not-started' : '';
+    var activitiesDone = (notStarted) ? '-' : activitiesDone;
+    var title = unit.title;
+    var score = gameApp.components.ScoreBadge(prize);
+    var progress = gameApp.components.ProgressBoard(gameApp.text.gamification_activities, activitiesDone, activitiesTotal, gameApp.text.gamification_completed);
+    var component = '<article class="gam-unitcard '+notStartedClass+'"><div class="gam-unitcard__inner"><header class="gam-unitcard__header "><h3 class="gam-title--2">'+title+'</h3></header><div class="gam-unitcard__body">'+score+progress+'</div></article>';
+    return component;
+
+}
+
 //----------------------------------//
 //                                  //
 //  Gamification Modals             //
@@ -725,14 +806,12 @@ gameApp.components.Medal = function(type, achievement, suffix, empty) {
 
 gameApp.createModalScore = function(tokens, grade) {
 
-    var result = gameApp.config.tokens.intervals.filter(function(interval) {
-        return interval.minPercent <= grade && interval.maxPercent >= grade;
-    });
+    var result = gameApp.calculateLevelScoreFromActivity(grade);
 
-    var title = result[0].title;
-    var subtitle = result[0].subtitle;
-    var given = tokens * result[0].given / 100;
-    var soundFile = result[0].sound;
+    var title = result.title;
+    var subtitle = result.subtitle;
+    var given = tokens * result.given / 100;
+    var soundFile = result.sound;
 
     var suffix = window.idtema;
     var id = 'gam-modal-score-'+suffix;
@@ -744,7 +823,6 @@ gameApp.createModalScore = function(tokens, grade) {
     var body = prize+message;
     
     var detectIfBonusIsOpen = !gameApp.detectBonusIsLocked();
-    var bonusId = gameApp.getFirstBonusActivity().id;
 
     var buttonRepeat = gameApp.components.Button(false, gameApp.text.gamification_try_again, "gameApp.closeModal('"+id+"')", false);
     var buttonContinueNotBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, 'gameApp.closeActivity()', false);
@@ -851,16 +929,16 @@ gameApp.loadScoreboard = function() {
 
 
     // Header
-    var totalScore = 2000; //TODO 
-    var score = '<div class="gam-score"><span class="gam-score__label">'+gameApp.text.gamification_score_label+'</span><span class="gam-score__total">'+totalScore+'</span></div>';
+    var score = gameApp.components.ScoreBadge();
     var unitsCompleted = 0; //TODO
     var unitsTotal = gameApp.detectGamificationUnits().length;
     var activitiesCompleted = gameApp.getRegularActivitiesDone().length;
     var activitiesTotal = gameApp.getAllRegularActivities().length;
-    var learningKitUnits = '<div class="gam-learning-kit__section"><h3 class="gam-learning-kit__title">'+gameApp.text.gamification_units+'</h3><div class="gam-learning-kit__score">'+unitsCompleted+'/'+unitsTotal+'</div><div class="gam-learning-kit__label">'+gameApp.text.gamification_completed+'</div></div>';
-    var learningKitActivities = '<div class="gam-learning-kit__section"><h3 class="gam-learning-kit__title">'+gameApp.text.gamification_activities+'</h3><div class="gam-learning-kit__score">'+activitiesCompleted+'/'+activitiesTotal+'</div><div class="gam-learning-kit__label">'+gameApp.text.gamification_completed+'</div></div>';
-
-    var learningKit = '<div class="gam-learning-kit"><h2 class="gam-title--3">'+gameApp.text.gamification_active_learning_kit+'</h2><div class="gam-learning-kit__results">'+learningKitUnits+learningKitActivities+'</div></div>';
+    //var learningKitUnits = '<div class="gam-progressboard"><h3 class="gam-progressboard__title">'+gameApp.text.gamification_units+'</h3><div class="gam-progressboard__score">'+unitsCompleted+'/'+unitsTotal+'</div><div class="gam-progressboard__label">'+gameApp.text.gamification_completed+'</div></div>';
+    //var learningKitActivities = '<div class="gam-progressboard"><h3 class="gam-progressboard__title">'+gameApp.text.gamification_activities+'</h3><div class="gam-progressboard__score">'+activitiesCompleted+'/'+activitiesTotal+'</div><div class="gam-progressboard__label">'+gameApp.text.gamification_completed+'</div></div>';
+    var learningKitUnits = gameApp.components.ProgressBoard(gameApp.text.gamification_units, unitsCompleted, unitsTotal, gameApp.text.gamification_completed);
+    var learningKitActivities = gameApp.components.ProgressBoard(gameApp.text.gamification_activities, activitiesCompleted, activitiesTotal, gameApp.text.gamification_completed);
+    var learningKit = '<div class="gam-learning-kit"><h2 class="gam-title--3">'+gameApp.text.gamification_active_learning_kit+'</h2><div class="gam-progressboard__wrapper">'+learningKitUnits+learningKitActivities+'</div></div>';
 
     var topheader = '<div class="gam-page__header__top --placeholder"></div><div class="gam-page__header__top"><h1 class="gam-title">'+gameApp.text.gamification_scoreboard_title+'</h1><button class="gam-button" onclick="gameApp.closePage(0);">'+gameApp.text.gamification_close+'</button></div>';
     var bottomheader = '<div class="gam-page__header__bottom">'+score+learningKit+'</div>';
@@ -870,8 +948,8 @@ gameApp.loadScoreboard = function() {
     $('.gam-page--scoreboard').append(header);
 
     var bodyMedals = gameApp.getMedalsFromUser();
-    var bodyUnits = '';
-    var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active" id="gam-medals">'+bodyMedals+'</div><div class="gam-tabs__content__item" id="gam-units">'+bodyUnits+'</div></div></div>';
+    var bodyUnits = gameApp.getProgressFromUser();
+    var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals" class="ox-js-tabs">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units" class="ox-js-tabs">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active" id="gam-medals">'+bodyMedals+'</div><div class="gam-tabs__content__item" id="gam-units">'+bodyUnits+'</div></div></div>';
     $('.gam-page--scoreboard').append(body);
 
     var bodyClass = gameApp.config.bodyClasses[0];
@@ -977,7 +1055,7 @@ jQuery(function() {
         gameApp.getCourseData(true);
     }*/
 
-    console.log("Testing2");
+    console.log("Testing3");
 
     $('body').on('click', '.gam-js-goToScoreboard', function(e) {
         e.preventDefault();
@@ -992,9 +1070,17 @@ jQuery(function() {
     });
 
 
-    $('body').on('click', '.js-correct', function(e) {
+    /*$('body').on('click', '.js-correct', function(e) {
         var tokens = gameApp.tokenActivity(window.idcurso);
         gameApp.createModalScore(tokens, 0);
+    });*/
+
+    $('body').on('click', '.ox-js-tabs', function(e) {
+        e.preventDefault();
+        var button = $(this);
+        var target = $(this).attr('href');
+
+        gameApp.tabs(button, target);
     });
 
 
