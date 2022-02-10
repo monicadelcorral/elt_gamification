@@ -509,6 +509,12 @@
       }
     }
     &.--unlocked {
+
+      .gam-lock {
+        position: relative;
+        top: -58px;
+      }
+
       .gam-subtitle {
         &::after {
           content: '';

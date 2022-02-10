@@ -595,6 +595,10 @@ body.gam--locked::after {
   width: 75px;
   height: 164px;
 }
+.gam-modal.gam-modal-lock.--unlocked .gam-lock {
+  position: relative;
+  top: -58px;
+}
 .gam-modal.gam-modal-lock.--unlocked .gam-subtitle::after {
   content: "";
   display: inline-block;
