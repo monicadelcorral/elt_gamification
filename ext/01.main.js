@@ -153,7 +153,6 @@ gameApp.config.tree = {
 }
 
 gameApp.config.rangeMedalsDiamonds = 100;
-gameApp.bonusActivities = [];
 
 //----------------------------------//
 //                                  //
@@ -171,52 +170,35 @@ gameApp.calculateMedalsDiamonds = function() {
     return array;
 }
 
-gameApp.getAllBonusActivities = function() {
-
-    var data = blink.gamification.cursoJson;
-
-    $.each(data.units, function(i, unit) {
-        var bonusActivities = unit.subunits.filter(function(subunit) {
-            var tags = typeof subunit.tags !== "undefined" ? subunit.tags.split(" ") : [];
-            var tokens = typeof subunit.game_token !== "undefined" ? subunit.game_token : false;
-            return tags.indexOf(gameApp.config.tags.gamification_bonus) >= 0 && tokens;
-        });
-        var bonusActivitiesId = _.pluck(bonusActivities, 'id');
-
-        if (bonusActivitiesId.length > 0) {
-            var newArray = [...new Set([gameApp.bonusActivities,bonusActivitiesId].reduce( (a, e) => a.concat(e), []))].sort()
-            gameApp.bonusActivities = newArray;
-        };
-        
-    });    
-    return gameApp.bonusActivities;
-}
-
 
 blink.gamification.getBadgesModel = function() {
     var arrayMedalsDiamonds = gameApp.calculateMedalsDiamonds();
     return [{
         name: "Activities",
         levels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-        calc: function() { //TODO
-            var activitiesCompleted = 0;
-            var activitiesTotal = 100;
+        calc: function() {
+            gameApp.prepareProgressData();
+            var activitiesTotalData = gameApp.getAllRegularActivities();
+            var activitiesTotal = activitiesTotalData.length;
+            var activitiesCompletedData = gameApp.getRegularActivitiesDone(activitiesTotalData);
+            var activitiesCompleted = activitiesCompletedData.length;
             return Math.ceil(activitiesCompleted * 100 / activitiesTotal)
         }
     }, {
         name: "Bonus activities",
-        levels: [1, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60],
+        levels: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60],
         calc: function(e) {
             var activitiesCompleted = typeof window.actividades !== "undefined" ?  _.keys(window.actividades) : [];
             var bonusTotal = gameApp.getAllBonusActivities();
-            var bonusCompleted = bonusTotal.length - _.intersection(activitiesCompleted.sort(),bonusTotal.sort()).length;
+            var bonusTotalId = _.pluck(bonusTotal, 'id');
+            var bonusCompleted = bonusTotalId.length - _.intersection(activitiesCompleted.sort(),bonusTotalId.sort()).length;
             return bonusCompleted;
         }
     }, {
         name: "Diamonds",
         levels: arrayMedalsDiamonds,
-        calc: function(e) { //TODO
-            var diamondsEarned = 0;
+        calc: function(e) {
+            var diamondsEarned = gameApp.getUserScore();
             return diamondsEarned;
         }
     }]
@@ -465,8 +447,9 @@ gameApp.getBonusActivitiesFromUnit = function(id) {
         return tags.indexOf(gameApp.config.tags.gamification_bonus) >= 0 && tokens;
     });
 
-    var unitActivitiesId = _.pluck(bonusActivities, 'id');
-    return unitActivitiesId;
+    //var bonusActivitiesId = _.pluck(bonusActivities, 'id');
+
+    return bonusActivities;
 
 }
 
@@ -490,13 +473,12 @@ gameApp.getAllRegularActivities = function() {
 }
 
 gameApp.getRegularActivitiesDone = function(activities) {
-
     var regularActivities = (typeof activities !== 'undefined') ? activities : gameApp.getAllRegularActivities();
     var regularActivitiesId = _.pluck(regularActivities, 'id');
 
     var activitiesDone = gameApp.userProgress;
 
-    activitiesDone = activitiesDone.filter(function(activity, key) {
+    activitiesDone = activitiesDone.filter(function(activity) {
         return activity.nota !== '';
     });
 
@@ -532,13 +514,15 @@ gameApp.getAllBonusActivities = function() {
     var bonusActivities = [];
     var data = blink.gamification.cursoJson;
     
-    var bonusUnits = data.units.filter(function(unit) {
+    var gamificationUnits = data.units.filter(function(unit) {
         var tags = typeof unit.tags !== "undefined" ? unit.tags.split(" ") : [];
-        return tags.indexOf(gameApp.config.tags.gamification_bonus) >= 0;
+        return tags.indexOf(gameApp.config.tags.gamification_unit) >= 0;
+
     });
     
-    $.each(bonusUnits, function(i, unit) {
-        var bonusActivitiesFromUnit = gameApp.getRegularActivitiesFromUnit(unit.id);
+    $.each(gamificationUnits, function(i, unit) {
+       
+        var bonusActivitiesFromUnit = gameApp.getBonusActivitiesFromUnit(unit.id);
         if (bonusActivitiesFromUnit.length) bonusActivities = _.union(bonusActivities, bonusActivitiesFromUnit);
     });
 
@@ -579,6 +563,49 @@ gameApp.getBonusActivitiesDoneFromUnit = function(id, activitiesTotal) {
     var bonusActivitiesDone = _.intersection(activitiesDoneId.sort(),bonusActivitiesId.sort());
 
     return bonusActivitiesDone;
+
+}
+
+
+gameApp.detectIfUnitIsComplete = function(id) {
+    var isComplete = false;
+
+    var bonusActivities = gameApp.getBonusActivitiesFromUnit(id);
+    var bonusActivitiesId = _.pluck(bonusActivities, 'id');
+    var regularActivities = gameApp.getRegularActivitiesFromUnit(id);
+    var regularActivitiesId = _.pluck(regularActivities, 'id');
+
+    var allActivitiesId = bonusActivitiesId.concat(regularActivitiesId);
+    
+    var regularActivitiesDoneId = gameApp.getRegularActivitiesDoneFromUnit(id, regularActivities);
+    
+    var bonusActivitiesDoneId = gameApp.getBonusActivitiesDoneFromUnit(id, bonusActivities);
+
+    var allActivitiesDoneId = regularActivitiesDoneId.concat(bonusActivitiesDoneId);
+
+    isComplete = _.intersection(allActivitiesDoneId.sort(), allActivitiesId.sort());
+
+    return isComplete.length <=  0;
+}
+
+
+gameApp.getAllCompleteUnits = function() {
+    
+    var data = blink.gamification.cursoJson;
+    var unitsComplete = 0;
+
+    var units = data.units.filter(function(unit) {
+        var tags = typeof unit.tags !== "undefined" ? unit.tags.split(" ") : [];
+        return tags.indexOf(gameApp.config.tags.gamification_bonus) >= 0;
+    });
+
+    $.each(units, function(i, unit) {
+        if (gameApp.detectIfUnitIsComplete(unit.id)) {
+            unitsComplete++;
+        }
+    });
+
+    return unitsComplete;
 
 }
 
@@ -973,10 +1000,6 @@ gameApp.initShortcutScoreboard = function() {
 
 }
 
-gameApp.getScoreboardData = function() {
-    
-}
-
 gameApp.initScoreboard = function() {
 
     if ($('body').hasClass('edit')) return;
@@ -1007,7 +1030,7 @@ gameApp.loadScoreboard = function() {
     var score = gameApp.components.ScoreBadge();
     var unitsTotalData = gameApp.detectGamificationUnits();
     var unitsTotal = unitsTotalData.length;
-    var unitsCompleted = '-'; //TODO
+    var unitsCompleted = gameApp.getAllCompleteUnits();
     var activitiesTotalData = gameApp.getAllRegularActivities();
     var activitiesTotal = activitiesTotalData.length;
     var activitiesCompletedData = gameApp.getRegularActivitiesDone(activitiesTotalData);
@@ -1023,19 +1046,12 @@ gameApp.loadScoreboard = function() {
     var bottomheader = '<div class="gam-page__header__bottom">'+score+learningKit+'</div>';
     var header = '<header class="gam-page__header"><div class="gam-page__header__inner">'+topheader+bottomheader+'</div></header>';
 
-
     $('.gam-page--scoreboard').append(header);
-
-
 
     var body = '<div class="gam-tabs"><div class="gam-tabs__list"><ul><li class="--current"><a href="#gam-medals" class="ox-js-tabs">'+gameApp.text.gamification_medals+'</a></li><li><a href="#gam-units" class="ox-js-tabs">'+gameApp.text.gamification_units+'</a></li></ul></div><div class="gam-tabs__content"><div class="gam-tabs__content__item --active --loading" id="gam-medals"></div><div class="gam-tabs__content__item --loading" id="gam-units"></div></div></div>';
     $('.gam-page--scoreboard').append(body);
 
     gameApp.loadScoreboardContent();
-
-    var bodyClass = gameApp.config.bodyClasses[0];
-    $('body').addClass(bodyClass).addClass('--loading');
-    gameApp.removeUnusedClass(bodyClass);
 
 }
 
@@ -1054,7 +1070,7 @@ gameApp.initBonusActivity = function() {
 }
 
 gameApp.initActivity = function(id) {
-    console.log("Gamification ACtivity loaded");
+    console.log("Gamification Activity loaded");
 
     var tokens = gameApp.tokenActivity(window.idcurso);
 

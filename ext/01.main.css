@@ -694,9 +694,11 @@ body.gam--locked::after {
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
+  margin-bottom: -40px;
 }
 .gam-medals__body > * {
-  width: 33.3333%;
+  width: 20%;
+  margin-bottom: 40px;
 }
 .gam-medals__header {
   font-size: 21px;
