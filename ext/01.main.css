@@ -542,6 +542,75 @@ body.gam--locked::after {
   z-index: 5;
   animation: diamond 2s linear infinite;
 }
+.gam-modal.gam-modal-medal .gam-modal__header {
+  padding-top: 60px;
+}
+.gam-modal.gam-modal-medal .gam-modal__body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  min-height: 120px;
+}
+.gam-modal.gam-modal-medal .gam-modal__body .gam-subtitle {
+  min-width: 100%;
+  position: relative;
+  top: 30px;
+}
+.gam-modal.gam-modal-medal .gam-modal__body .gam-title--2 {
+  text-align: center;
+  color: #e67300;
+  min-width: 100%;
+  margin-top: 100px;
+  position: relative;
+  top: 30px;
+}
+.gam-modal.gam-modal-medal .gam-modal__body .gam-medal {
+  width: 100%;
+  min-height: 0;
+}
+.gam-modal.gam-modal-medal .gam-modal__inner {
+  position: relative;
+}
+.gam-modal.gam-modal-medal .gam-modal__inner::before {
+  content: "";
+  background-image: url(images/prize-background.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 184px auto;
+  animation: sunrays 4s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -102px;
+  margin-top: -102px;
+  width: 200px;
+  height: 200px;
+  z-index: 1;
+}
+.gam-modal.gam-modal-medal .gam-modal__inner::after {
+  content: "";
+  display: block;
+  width: 108px;
+  height: 108px;
+  background: url(images/medal_activity.svg) center center no-repeat;
+  background-size: contain;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -54px;
+  margin-left: -54px;
+  pointer-events: none;
+  z-index: 5;
+  animation: pulse 2s linear infinite;
+}
+.gam-modal.gam-modal-medal.--type-1 .gam-modal__inner::after {
+  background-image: url(images/medal_bonus.svg);
+}
+.gam-modal.gam-modal-medal.--type-2 .gam-modal__inner::after {
+  background-image: url(images/medal_diamonds.svg);
+}
 .gam-modal.gam-modal-lock .gam-modal__inner {
   position: relative;
 }

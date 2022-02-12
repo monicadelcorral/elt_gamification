@@ -69,8 +69,12 @@ gameApp.text = {
     gamification_bonus_locked_subtitle : "Oops! Complete all the activities on this page to unlock the Bonus activity.",
     gamification_bonus_unlocked_subtitle : "Win 25 bonus diamonds!",
     gamification_medals : "Medals",
-    gamification_no_medals : "No medals"
-
+    gamification_no_medals : "No medals",
+    gamification_medal_new : "New medal",
+    gamification_medal_title : "Well done",
+    gamification_medal_subtitle_1 : "You completed %1 of the activities!",
+    gamification_medal_subtitle_2 : "You completed %1 Bonus activities!",
+    gamification_medal_subtitle_3 : "You won %1 diamonds!"
 }
 
 gameApp.themeName = "oxford-elt";
@@ -153,6 +157,9 @@ gameApp.config.tree = {
 }
 
 gameApp.config.rangeMedalsDiamonds = 100;
+
+gameApp.storage = window.localStorage;
+
 
 //----------------------------------//
 //                                  //
@@ -721,6 +728,27 @@ gameApp.getUserScore = function() {
     return score;   */
 }
 
+gameApp.detectNewMedals = function() {
+
+    var badges = gameApp.userBadges;
+    var hasModifications = badges != blink.gamification.cursoJson.badges;
+
+    if (hasModifications) {
+        var newBadges = [];
+        
+        $.each(badges, function(i, v){
+
+            if ((v != blink.gamification.cursoJson.badges[i])) {
+                newBadges.push(i);
+            }
+        });
+        
+        gameApp.storage.setItem('new-medals', newBadges);
+          
+        gameApp.userBadges = blink.gamification.cursoJson.badges;
+    }
+}
+
 
 gameApp.openModal = function(modal, id, extraClassBody) {
    $('body').append(modal);
@@ -923,8 +951,16 @@ gameApp.createModalScore = function(tokens, grade) {
     
     var detectIfBonusIsOpen = !gameApp.detectBonusIsLocked();
 
+    var newMedals = gameApp.storage.getItem('new-medals');
+
+    var actionsContinue = (newMedals) ?
+            "gameApp.closeModal('"+id+"'); gameApp.createModalMedal('"+newMedals[0]+"', 'gameApp.closeActivity()')"
+        :
+            "gameApp.closeModal('"+id+"'); gameApp.closeActivity()"
+        ;
+
     var buttonRepeat = gameApp.components.Button(false, gameApp.text.gamification_try_again, "gameApp.closeModal('"+id+"')", false);
-    var buttonContinueNotBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, 'gameApp.closeActivity()', false);
+    var buttonContinueNotBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, actionsContinue, false);
     var buttonContinueBonus = gameApp.components.Button(false, gameApp.text.gamification_continue, "gameApp.closeModal('"+id+"'); gameApp.createModalBonus()", false);
 
     var buttonContinue = (detectIfBonusIsOpen) ? buttonContinueBonus : buttonContinueNotBonus ;
@@ -961,11 +997,27 @@ gameApp.createModalBonus = function() {
     var bonusId = gameApp.getFirstBonusActivity().id;
     var insideBonus = bonusId === window.idclase.toString();
 
-    var buttonStartActivityInside = gameApp.components.Button(false, gameApp.text.gamification_ok, "gameApp.closeModal('"+id+"')", false, extraClassBody);
-    var buttonStartACtivityOutside = gameApp.components.Button(false, gameApp.text.gamification_start_activity, "gameApp.closeModal('"+id+"'); gameApp.goToActivity('"+bonusId+"')", false);
-    var buttonStartActivity = (insideBonus) ?  buttonStartActivityInside : buttonStartACtivityOutside;
+    var newMedals = gameApp.storage.getItem('new-medals');
 
-    var buttonContinue = (!insideBonus || (insideBonus && isLocked)) ? gameApp.components.Button(false, gameApp.text.gamification_continue, "gameApp.closeModal('"+id+"'); gameApp.closeActivity()", false) : '';
+    var actionsStart = (newMedals) ?
+            "gameApp.closeModal('"+id+"'); gameApp.createModalMedal('"+newMedals[0]+"', 'gameApp.closeActivity()')"
+        : (!newMedals && insideBonus) ?
+            "gameApp.closeModal('"+id+"')"
+        : 
+            "gameApp.closeModal('"+id+"'); gameApp.goToActivity('"+bonusId+"')"
+        ;
+
+    var actionsContinue = (newMedals) ?
+            "gameApp.closeModal('"+id+"'); gameApp.createModalMedal('"+newMedals[0]+"', 'gameApp.closeActivity()')"
+        : 
+            "gameApp.closeModal('"+id+"'); gameApp.closeActivity(); )"
+        ;
+
+    var extraClassesButton = (insideBonus) ? extraClassBody : '';
+
+    var buttonStartActivity = gameApp.components.Button(false, gameApp.text.gamification_ok, actionsStart, false, extraClassesButton);
+
+    var buttonContinue = (!insideBonus || (insideBonus && isLocked)) ? gameApp.components.Button(false, gameApp.text.gamification_continue, actionsContinue, false) : '';
     
     var footer = (isLocked) ? buttonContinue : buttonStartActivity+buttonContinue;
 
@@ -976,6 +1028,56 @@ gameApp.createModalBonus = function() {
     var modal = gameApp.components.Modal(id, header, body, footer, extraClasses);
     
     gameApp.openModal(modal, id, extraClassBody);
+
+}
+
+
+gameApp.createModalMedal = function(type, actionContinue) {
+    var type = Number(type);
+    var level = blink.gamification.cursoJson.badges[type].level;
+    var prize = blink.gamification.getBadgesModel()[type].levels[level];
+
+    var title = gameApp.text.gamification_medal_new;
+    var titleSec = gameApp.text.gamification_medal_title;
+    var subtitleString = (type === 0) ? gameApp.text.gamification_medal_subtitle_1 : (type === 1) ? gameApp.text.gamification_medal_subtitle_2 : gameApp.text.gamification_medal_subtitle_3;
+    var subtitle = subtitleString.replace('%1', prize);
+
+    var id = 'gam-modal-bonus-'+type;
+    var soundFile = gameApp.sounds[0];
+    var sound = '<div style="display: none"><audio id="gam-modal-audio"><source src="' + soundFile + '" type="audio/mpeg"></audio></div>';
+    var header = '<h1 class="gam-title">'+title+'</h1>'+sound;
+    var medal = '<div class="gam-medal --'+type+'"></div>';
+    var message = '<div class="gam-title--2">'+titleSec+'</div>';
+    message += '<div class="gam-subtitle">'+subtitle+'</div>';
+    var body = medal+message;
+
+    var newMedals = gameApp.storage.getItem('new-medals');
+
+    var nextMedal = newMedals.split(",").filter(function(item) {
+        console.log(item, type);
+        return item != type;
+    });
+
+    nextMedal = _.compact(nextMedal);    
+    gameApp.storage.setItem('new-medals', nextMedal);
+    console.log(nextMedal);
+
+    var actions = (nextMedal.length) ?
+            "gameApp.closeModal('"+id+"'); gameApp.createModalMedal('"+nextMedal[0]+"', '"+actionContinue+"')"
+        :
+            "gameApp.closeModal('"+id+"'); "+actionContinue+";"
+        ;
+
+
+    var buttonContinue = gameApp.components.Button(false, gameApp.text.gamification_ok, actions, false);
+    
+    var footer = buttonContinue;
+
+    var extraClasses = 'gam-modal-medal --type-'+type+' --level-'+level;
+
+    var modal = gameApp.components.Modal(id, header, body, footer, extraClasses);
+    
+    gameApp.openModal(modal, id);
 
 }
 
@@ -1113,7 +1215,11 @@ gameApp.initActivity = function(id) {
 
         if (gameApp.config.isStudent) {
             //var grade = gameApp.getGrade();
-            //gameApp.createModalScore(tokens, grade);    
+            //gameApp.createModalScore(tokens, grade);  
+            
+            gameApp.detectNewMedals();
+
+
         }
 
     });
