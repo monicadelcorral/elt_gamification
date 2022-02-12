@@ -556,15 +556,16 @@ body.gam--locked::after {
 .gam-modal.gam-modal-medal .gam-modal__body .gam-subtitle {
   min-width: 100%;
   position: relative;
-  top: 30px;
+  top: 40px;
 }
 .gam-modal.gam-modal-medal .gam-modal__body .gam-title--2 {
+  font-size: 30px;
   text-align: center;
   color: #e67300;
   min-width: 100%;
   margin-top: 100px;
   position: relative;
-  top: 30px;
+  top: 40px;
 }
 .gam-modal.gam-modal-medal .gam-modal__body .gam-medal {
   width: 100%;
