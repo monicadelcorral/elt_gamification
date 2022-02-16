@@ -1033,4 +1033,12 @@ body.gam--locked::after {
   right: -8px;
 }
 
+#actividad .carousel-inner .item-container .revision-budget {
+  display: none !important;
+}
+
+#actividad .carousel-inner .item-container .header .title h3 {
+  padding-right: 114px;
+}
+
 /*# sourceMappingURL=01.main.css.map */
