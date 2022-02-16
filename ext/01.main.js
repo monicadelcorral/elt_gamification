@@ -192,11 +192,12 @@ gameApp.calculateMedalsDiamonds = function() {
 
 blink.gamification.getBadgesModel = function() {
     var arrayMedalsDiamonds = gameApp.calculateMedalsDiamonds();
+    gameApp.prepareProgressData();
+
     return [{
         name: "Activities",
         levels: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
         calc: function() {
-            gameApp.prepareProgressData();
             var activitiesTotalData = gameApp.getAllRegularActivities();
             var activitiesTotal = activitiesTotalData.length;
             var activitiesCompletedData = gameApp.getRegularActivitiesDone(activitiesTotalData);
@@ -207,10 +208,8 @@ blink.gamification.getBadgesModel = function() {
         name: "Bonus activities",
         levels: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60],
         calc: function(e) {
-            var activitiesCompleted = typeof window.actividades !== "undefined" ?  _.keys(window.actividades) : [];
-            var bonusTotal = gameApp.getAllBonusActivities();
-            var bonusTotalId = _.pluck(bonusTotal, 'id');
-            var bonusCompleted = bonusTotalId.length - _.intersection(activitiesCompleted.sort(),bonusTotalId.sort()).length;
+            var bonusTotalCompletedId = gameApp.getBonusActivitiesDone();
+            var bonusCompleted = bonusTotalCompletedId.length;
             return bonusCompleted;
         }
     }, {
@@ -721,7 +720,8 @@ gameApp.getProgressFromUser = function() {
         var bonusActivitiesDone = gameApp.getBonusActivitiesDoneFromUnit(unit.id, bonusActivitiesTotalData).length;
         var activitiesDone = regularActivitiesDone + bonusActivitiesDone;
 
-        var notStarted = false; //TODO
+        var notStarted = gameApp.detectUnitNotStarted(unit);
+
         body += gameApp.components.Unitcard(unit, prize, activitiesTotal, activitiesDone, notStarted)
     });
     body += '</div>';
@@ -769,6 +769,25 @@ gameApp.detectNewMedals = function() {
           
         gameApp.userBadges = blink.gamification.cursoJson.badges;
     }
+}
+
+gameApp.detectUnitNotStarted = function(unit) {
+
+    var subunits = unit.subunits;
+    var subunitsId = _.pluck(subunits, 'id');
+    var activitiesDone =  gameApp.userProgress;
+
+    activitiesDone = activitiesDone.filter(function(activity) {
+        var hasScore = (activity.idtema === unit.id) && activity.game_score && activity.game_score !== '';
+        return hasScore;
+    });
+
+    activitiesDone =  _.pluck(activitiesDone, 'id');
+
+    var activitiesDoneFromUnit = _.intersection(activitiesDone.sort(),subunitsId.sort());
+    
+    return !activitiesDoneFromUnit.length;
+
 }
 
 
@@ -939,6 +958,7 @@ gameApp.components.Unitcard = function(unit, prize, activitiesTotal, activitiesD
     var notStartedClass = (notStarted) ? '--not-started' : '';
     var activitiesDone = (notStarted) ? '-' : activitiesDone;
     var title = unit.title;
+    prize = (notStarted) ? '-' : prize;
     var score = gameApp.components.ScoreBadge(prize);
     var progress = gameApp.components.ProgressBoard(gameApp.text.gamification_activities, activitiesDone, activitiesTotal, gameApp.text.gamification_completed);
     var component = '<article class="gam-unitcard '+notStartedClass+'"><div class="gam-unitcard__inner"><header class="gam-unitcard__header "><h3 class="gam-title--2">'+title+'</h3></header><div class="gam-unitcard__body">'+score+progress+'</div></article>';
