@@ -47,7 +47,7 @@
 
 @mixin button() {
   @include button-base();
-  padding: 8px 20px 12px 20px;
+  padding: 9px 20px 10px 20px;
   background-color: $color_3;
   color: $color_white;
   font-size: 14px;
@@ -170,6 +170,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    flex-grow: 2;
   }
 
   &__title {
@@ -850,7 +851,7 @@
     .gam-progressboard {
       flex-direction: column;
       margin-left: 20px;
-
+      
       &__title {
         font-size: 15px;
         font-weight: bold;

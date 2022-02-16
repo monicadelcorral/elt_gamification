@@ -16,6 +16,11 @@
             top: 20px;
             right: 20px;
             background-color: $color_7;
+
+            &:hover:not(.disabled):not(disabled):hover {
+                background-color: $color_white;
+                color: $color_7;
+            }
         }
         &__top {
             padding: 40px 0 40px;
@@ -51,7 +56,11 @@
             }
 
             .gam-score {
-                margin-right: 80px;
+                margin-right: 120px;
+            }
+
+            .gam-progressboard {
+                min-width: 230px;
             }
         }
     }

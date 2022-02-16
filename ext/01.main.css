@@ -186,6 +186,10 @@ body.gam--locked::after {
   right: 20px;
   background-color: #008a26;
 }
+.gam-page__header .gam-button:hover:not(.disabled):not(disabled):hover {
+  background-color: #fff;
+  color: #008a26;
+}
 .gam-page__header__top {
   padding: 40px 0 40px;
   text-align: center;
@@ -220,7 +224,10 @@ body.gam--locked::after {
   flex-grow: 2;
 }
 .gam-page__header__bottom .gam-score {
-  margin-right: 80px;
+  margin-right: 120px;
+}
+.gam-page__header__bottom .gam-progressboard {
+  min-width: 230px;
 }
 
 .gam-button {
@@ -242,7 +249,7 @@ body.gam--locked::after {
   -webkit-appearance: none;
   cursor: pointer;
   text-decoration: none;
-  padding: 8px 20px 12px 20px;
+  padding: 9px 20px 10px 20px;
   background-color: #395482;
   color: #fff;
   font-size: 14px;
@@ -367,6 +374,7 @@ body.gam--locked::after {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  flex-grow: 2;
 }
 .gam-progressboard__title {
   margin: 0 6px 0 0;
