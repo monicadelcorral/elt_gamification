@@ -120,7 +120,7 @@ body.gam--locked::after {
   font-weight: bold;
   line-height: 0.63;
   color: #e67300;
-  margin: 0 0 30px;
+  margin: 0 0 22px;
 }
 .gam-title span {
   font-size: 30px;
@@ -541,7 +541,7 @@ body.gam--locked::after {
   text-align: center;
 }
 .gam-modal__footer {
-  padding: 30px 30px 30px;
+  padding: 30px 30px 16px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -555,6 +555,9 @@ body.gam--locked::after {
 }
 .gam-modal__footer .gam-button:last-child {
   margin-left: auto;
+}
+.gam-modal .gam-prize {
+  margin-right: 30px;
 }
 .gam-modal.gam-modal-prize .gam-modal__header {
   padding-top: 60px;
@@ -617,10 +620,14 @@ body.gam--locked::after {
   flex-wrap: wrap;
   min-height: 120px;
 }
+.gam-modal.gam-modal-medal .gam-modal__body .gam-title {
+  margin-bottom: 2px;
+}
 .gam-modal.gam-modal-medal .gam-modal__body .gam-subtitle {
   min-width: 100%;
   position: relative;
   top: 40px;
+  margin-bottom: 10px;
 }
 .gam-modal.gam-modal-medal .gam-modal__body .gam-title--2 {
   font-size: 30px;
@@ -698,6 +705,7 @@ body.gam--locked::after {
 .gam-modal.gam-modal-lock .gam-modal__body {
   position: relative;
   z-index: 10;
+  padding-bottom: 0;
 }
 .gam-modal.gam-modal-lock .gam-modal__body .gam-lock {
   min-height: 180px;
@@ -722,16 +730,23 @@ body.gam--locked::after {
   z-index: 1;
   top: 8px;
   left: 50%;
-  margin-left: -36px;
+  margin-left: -49px;
   animation: unlock 0.5s linear forwards;
   animation-delay: 0.25s;
   transform-origin: 20px top;
   width: 75px;
   height: 164px;
 }
+.gam-modal.gam-modal-lock.--unlocked .gam-title {
+  margin-top: -18px;
+  margin-bottom: 2px;
+}
 .gam-modal.gam-modal-lock.--unlocked .gam-lock {
   position: relative;
   top: -58px;
+}
+.gam-modal.gam-modal-lock.--unlocked .gam-subtitle {
+  margin-top: -24px;
 }
 .gam-modal.gam-modal-lock.--unlocked .gam-subtitle::after {
   content: "";
@@ -764,6 +779,7 @@ body.gam--locked::after {
 }
 .gam-modal.gam-modal-lock.--locked .gam-modal__body .gam-lock__top {
   animation: lock 0.5s linear forwards;
+  margin-left: -36px;
 }
 
 .gam-tabs {

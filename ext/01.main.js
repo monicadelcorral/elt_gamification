@@ -1039,7 +1039,12 @@ gameApp.createModalBonus = function() {
     var message = '<div class="gam-subtitle">'+subtitle+'</div>';
     var body = lock+message;
 
-    var bonusId = gameApp.getFirstBonusActivity().id;
+    var bonusId = (typeof gameApp.getFirstBonusActivity() !== 'undefined') ? gameApp.getFirstBonusActivity().id : '';
+    
+    if (bonusId === '' || !bonusId) {
+        console.log("No bonus activities in this unit");
+        return false;
+    }
     var insideBonus = bonusId === window.idclase.toString();
 
     var newMedals = gameApp.storage.getItem('new-medals');

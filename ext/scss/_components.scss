@@ -359,7 +359,6 @@
       transform: translateY(0);
       opacity: 1;
     }
-  
 
   }
 
@@ -374,7 +373,7 @@
   }
 
   &__footer {
-    padding: 30px 30px 30px;
+    padding: 30px 30px 16px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -390,6 +389,10 @@
         margin-left: auto; 
       }
     }
+  }
+
+  .gam-prize {
+    margin-right: 30px;
   }
 
   &.gam-modal-prize {
@@ -465,10 +468,15 @@
       flex-wrap: wrap;
       min-height: 120px;
 
+      .gam-title {
+        margin-bottom: 2px;
+      }
+
       .gam-subtitle {
         min-width: 100%;
         position: relative;
         top: 40px;
+        margin-bottom: 10px;
       }
 
       .gam-title--2 {
@@ -540,7 +548,6 @@
   }
 
 
-
   &.gam-modal-lock {
 
     .gam-modal__inner {
@@ -567,6 +574,7 @@
     .gam-modal__body {
       position: relative;
       z-index: 10;
+      padding-bottom: 0;
 
       .gam-lock {
         min-height: 180px;
@@ -592,7 +600,7 @@
           z-index: 1;
           top: 8px;
           left: 50%;
-          margin-left: -36px;
+          margin-left: -49px;
           animation: unlock 0.5s linear forwards;
           animation-delay: .25s;
           transform-origin: 20px top;
@@ -603,12 +611,20 @@
     }
     &.--unlocked {
 
+      .gam-title {
+        margin-top: -18px;
+        margin-bottom: 2px;
+      }
+
+
       .gam-lock {
         position: relative;
         top: -58px;
       }
 
       .gam-subtitle {
+        margin-top: -24px;
+        
         &::after {
           content: '';
           display: inline-block;
@@ -648,6 +664,7 @@
 
           &__top {
             animation: lock 0.5s linear forwards;
+            margin-left: -36px;
           }
         }
       }
