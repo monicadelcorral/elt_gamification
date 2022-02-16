@@ -732,8 +732,11 @@ gameApp.getProgressFromUser = function() {
 }
 
 gameApp.getUserScore = function() {
+    var score = 0;
 
-    return blink.user.coins;
+    if (typeof blink.user.coins !== 'undefined') score = blink.user.coins;
+
+    return score;
     
     /*var score = 0;
 
