@@ -165,10 +165,6 @@ body.gam--locked::after {
   margin: 0;
 }
 
-#actividad .carousel-inner .item-container .revision-budget {
-  display: none !important;
-}
-
 .gam-page__header {
   background: #18be34;
   color: #fff;
@@ -664,15 +660,15 @@ body.gam--locked::after {
 .gam-modal.gam-modal-medal .gam-modal__inner::after {
   content: "";
   display: block;
-  width: 108px;
-  height: 108px;
+  width: 128px;
+  height: 128px;
   background: url(images/medal_activity.svg) center center no-repeat;
   background-size: contain;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -54px;
-  margin-left: -54px;
+  margin-top: -64px;
+  margin-left: -64px;
   pointer-events: none;
   z-index: 5;
   animation: pulse 2s linear infinite;
