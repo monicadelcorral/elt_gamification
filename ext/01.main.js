@@ -300,7 +300,7 @@ gameApp.removeUnusedClass = function(currentClass) {
 gameApp.openTooltip = function(event, tooltip) {
     event = event || window.event;
     var trigger = event.target || event.srcElement;
-    var left = $(trigger).offset().left - 60;
+    var left = $(trigger).offset().left - 38;
 
     $(tooltip).css({'left': left}).addClass('--visible');
 }

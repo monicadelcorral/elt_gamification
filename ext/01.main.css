@@ -334,7 +334,7 @@ body.gam--locked::after {
   border-top: 12px solid #fff;
   position: absolute;
   bottom: -12px;
-  left: 60px;
+  left: 48px;
   z-index: 1;
 }
 
