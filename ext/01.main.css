@@ -1,57 +1,94 @@
-.glide {
+/* Slider */
+.slick-slider {
   position: relative;
-  width: 100%;
+  display: block;
   box-sizing: border-box;
-}
-.glide * {
-  box-sizing: inherit;
-}
-.glide__track {
-  overflow: hidden;
-}
-.glide__slides {
-  position: relative;
-  width: 100%;
-  list-style: none;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  touch-action: pan-Y;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-  display: flex;
-  flex-wrap: nowrap;
-  will-change: transform;
-}
-.glide__slides--dragging {
-  user-select: none;
-}
-.glide__slide {
-  width: 100%;
-  height: 100%;
-  flex-shrink: 0;
-  white-space: normal;
-  user-select: none;
   -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.glide__slide a {
-  user-select: none;
-  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-}
-.glide__arrows {
-  -webkit-touch-callout: none;
   user-select: none;
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
 }
-.glide__bullets {
-  -webkit-touch-callout: none;
-  user-select: none;
+
+.slick-list {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 0;
+  padding: 0;
 }
-.glide--rtl {
-  direction: rtl;
+.slick-list:focus {
+  outline: none;
+}
+.slick-list.dragging {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.slick-slider .slick-track,
+.slick-slider .slick-list {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.slick-track {
+  position: relative;
+  left: 0;
+  top: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.slick-track:before, .slick-track:after {
+  content: "";
+  display: table;
+}
+.slick-track:after {
+  clear: both;
+}
+.slick-loading .slick-track {
+  visibility: hidden;
+}
+
+.slick-slide {
+  float: left;
+  height: 100%;
+  min-height: 1px;
+  display: none;
+}
+[dir=rtl] .slick-slide {
+  float: right;
+}
+.slick-slide img {
+  display: block;
+}
+.slick-slide.slick-loading img {
+  display: none;
+}
+.slick-slide.dragging img {
+  pointer-events: none;
+}
+.slick-initialized .slick-slide {
+  display: block;
+}
+.slick-loading .slick-slide {
+  visibility: hidden;
+}
+.slick-vertical .slick-slide {
+  display: block;
+  height: auto;
+  border: 1px solid transparent;
+}
+
+.slick-arrow.slick-hidden {
+  display: none;
 }
 
 @font-face {
@@ -176,6 +213,11 @@ body.gam--locked::after {
   color: #fff;
   margin: 0;
 }
+@media (max-width: 580px) {
+  .gam-page__header .gam-title {
+    margin-top: 30px;
+  }
+}
 .gam-page__header .gam-button {
   position: absolute;
   top: 20px;
@@ -224,6 +266,53 @@ body.gam--locked::after {
 }
 .gam-page__header__bottom .gam-progressboard {
   min-width: 230px;
+}
+@media (max-width: 990px) {
+  .gam-page__header__bottom .gam-score {
+    margin-right: 40px;
+    flex-grow: 2;
+  }
+}
+@media (max-width: 760px) {
+  .gam-page__header__bottom .gam-progressboard {
+    min-width: 0;
+  }
+}
+@media (max-width: 700px) {
+  .gam-page__header__bottom {
+    flex-direction: column;
+  }
+  .gam-page__header__bottom .gam-score,
+.gam-page__header__bottom .gam-learning-kit {
+    width: 500px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .gam-page__header__bottom .gam-score {
+    margin-bottom: 30px;
+  }
+}
+@media (max-width: 760px) {
+  .gam-page__header__bottom {
+    border-radius: 8px;
+  }
+  .gam-page__header__bottom .gam-score, .gam-page__header__bottom .gam-learning-kit {
+    width: auto;
+    max-width: 80%;
+    align-items: center;
+  }
+  .gam-page__header__bottom .gam-learning-kit .gam-title--3 {
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .gam-page__header__bottom .gam-progressboard__wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .gam-page__header__bottom .gam-progressboard {
+    margin-bottom: 4px;
+    margin-right: 0;
+  }
 }
 
 .gam-button {
@@ -782,6 +871,7 @@ body.gam--locked::after {
   max-width: 100%;
   width: 904px;
   margin: 0 auto;
+  margin-bottom: 40px;
   padding: 62px 30px 30px;
   border-radius: 10px;
   border: solid 1px #c8c8c8;
@@ -955,11 +1045,8 @@ body.gam--locked::after {
   padding-left: 54px;
 }
 
-.glide {
-  position: relative;
-}
-
-.glide__arrow {
+.slick-next,
+.slick-prev {
   max-width: 100%;
   border-radius: 100px;
   white-space: nowrap;
@@ -986,7 +1073,8 @@ body.gam--locked::after {
   height: 100px;
   margin-top: -10px;
 }
-.glide__arrow > span {
+.slick-next > span,
+.slick-prev > span {
   top: 2px;
   white-space: normal;
   display: inline;
@@ -996,37 +1084,56 @@ body.gam--locked::after {
   position: relative;
   z-index: 10;
 }
-.glide__arrow.disabled {
+.slick-next.disabled,
+.slick-prev.disabled {
   cursor: default;
 }
-.glide__arrow input {
+.slick-next input,
+.slick-prev input {
   border: 0;
   padding: 0;
   margin: 0;
   background: transparent;
   white-space: normal;
 }
-.glide__arrow .fa {
-  color: #fff;
-  display: block;
-  font-size: 28px;
+.slick-next:hover,
+.slick-prev:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
-.glide__arrow.--disabled {
+.slick-next::before,
+.slick-prev::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-size: 16px auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.slick-next.slick-disabled,
+.slick-prev.slick-disabled {
   display: none !important;
 }
-.glide__arrow--left {
+
+.slick-prev {
   left: -30px;
   border-radius: 0 100px 100px 0;
 }
-.glide__arrow--left .fa {
-  left: -8px;
+.slick-prev::before {
+  background-image: url(images/left-chevron.png);
+  left: -6px;
 }
-.glide__arrow--right {
+
+.slick-next {
   right: -30px;
   border-radius: 100px 0 0 100px;
 }
-.glide__arrow--right .fa {
-  right: -8px;
+.slick-next::before {
+  background-image: url(images/right-chevron.png);
+  left: 6px;
 }
 
 #actividad .carousel-inner .item-container .revision-budget {
