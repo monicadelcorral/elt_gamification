@@ -1006,6 +1006,16 @@ body.gam--locked::after {
 .gam-unicard__wrapper .gam-unitcard {
   width: 33.333%;
 }
+@media (max-width: 990px) {
+  .gam-unicard__wrapper .gam-unitcard {
+    width: 50%;
+  }
+}
+@media (max-width: 700px) {
+  .gam-unicard__wrapper .gam-unitcard {
+    width: 100%;
+  }
+}
 
 .gam-unitcard {
   padding: 0 8px 16px 8px;

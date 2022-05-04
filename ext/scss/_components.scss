@@ -842,6 +842,13 @@
 
   .gam-unitcard {
     width: 33.333%;
+
+    @media (max-width: $mq_max_width_tablet_portrait) {
+      width: 50%;
+    }
+    @media (max-width: $mq_max_width_mobile) {
+      width: 100%;
+    }
   }
 }
 
